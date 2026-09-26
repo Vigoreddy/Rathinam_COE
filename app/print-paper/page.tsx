@@ -480,87 +480,76 @@ export default function PrintPaperPage() {
                   border: "1px solid #cbd5e1",
                   borderRadius: "12px",
                   boxShadow: "0 10px 30px rgba(0, 0, 0, 0.08)",
-                  padding: "40px 48px",
+                  padding: "36px 44px",
                   position: "relative",
                   overflow: "hidden",
-                  fontFamily: "Georgia, 'Times New Roman', serif",
+                  fontFamily: "'Times New Roman', Times, serif",
                   color: "#0f172a",
-                  lineHeight: 1.6,
+                  lineHeight: 1.5,
                 }}
               >
+                {/* QP Code & Reg No Box */}
+                <div style={{ textTransform: "uppercase", fontSize: "11px", fontWeight: "bold", textAlign: "right", marginBottom: "2px" }}>
+                  QP CODE: 252S099
+                </div>
+                <div style={{ fontSize: "11px", fontWeight: "bold", textAlign: "right", marginBottom: "12px" }}>
+                  Reg. No.:.........................
+                </div>
+
                 {/* Header Specification */}
-                <div style={{ textAlign: "center", borderBottom: "2px solid #0f172a", paddingBottom: "14px", marginBottom: "20px" }}>
-                  <div style={{ fontSize: "18px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "4px" }}>
+                <div style={{ textAlign: "center", lineHeight: 1.3, borderBottom: "1.5px solid #000000", paddingBottom: "10px", marginBottom: "14px" }}>
+                  <div style={{ fontSize: "16.5px", fontWeight: "bold", letterSpacing: "0.5px" }}>
                     RATHINAM GLOBAL (DEEMED TO BE UNIVERSITY)
                   </div>
-                  <div style={{ fontSize: "12.5px", fontWeight: 600, fontFamily: "sans-serif", color: "#334155", marginBottom: "6px" }}>
-                    (An Autonomous Institution, Coimbatore - 641021 | Affiliated to UGC & AICTE)
+                  <div style={{ fontSize: "11.5px", color: "#334155" }}>
+                    (An Autonomous Institution, Eachanari, Coimbatore - 641021 | Affiliated to UGC & AICTE)
                   </div>
-                  <div style={{ fontSize: "14px", fontWeight: 700, textTransform: "uppercase", textDecoration: "underline" }}>
-                    OFFICIAL END SEMESTER QUESTION PAPER SPECIFICATION
-                  </div>
-                  <div style={{ fontSize: "12px", fontFamily: "sans-serif", fontWeight: 600, color: "#475569", marginTop: "2px" }}>
+                  <div style={{ fontSize: "13px", fontWeight: "bold", textTransform: "uppercase", marginTop: "4px" }}>
                     {examType}
+                  </div>
+                  <div style={{ fontSize: "12.5px", fontWeight: "bold", marginTop: "2px" }}>
+                    {semesterYear.toUpperCase()}
+                  </div>
+                  <div style={{ fontSize: "12.5px", fontWeight: "bold", marginTop: "2px" }}>
+                    SUBJECT: {selectedSubject.toUpperCase()}
                   </div>
                 </div>
 
-                {/* Metadata Table */}
-                <table
-                  style={{
-                    width: "100%",
-                    borderCollapse: "collapse",
-                    fontSize: "12.5px",
-                    marginBottom: "20px",
-                    background: "#fafafa",
-                    border: "1px solid #0f172a",
-                    fontFamily: "sans-serif",
-                  }}
-                >
-                  <tbody>
-                    <tr>
-                      <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 700, width: "18%", background: "#f1f5f9" }}>Course / Subject:</td>
-                      <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 700, color: "#1e40af" }}>{selectedSubject}</td>
-                      <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 700, width: "15%", background: "#f1f5f9" }}>Duration:</td>
-                      <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 600, width: "20%" }}>{duration}</td>
-                    </tr>
-                    <tr>
-                      <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 700, background: "#f1f5f9" }}>Semester/Year:</td>
-                      <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 600 }}>{semesterYear}</td>
-                      <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 700, background: "#f1f5f9" }}>Max. Marks:</td>
-                      <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 700, color: "#16a34a" }}>{maxMarks} Marks</td>
-                    </tr>
-                  </tbody>
-                </table>
+                {/* Time & Max Marks Row */}
+                <div style={{ borderTop: "1.5px solid #000000", borderBottom: "1.5px solid #000000", padding: "4px 8px", display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: "bold", marginBottom: "14px", fontFamily: "sans-serif" }}>
+                  <span>Time: {duration}</span>
+                  <span>Maximum: {maxMarks} Marks</span>
+                </div>
 
                 {/* General Instructions */}
-                <div style={{ fontSize: "11.5px", fontStyle: "italic", border: "1px dashed #cbd5e1", padding: "8px 14px", borderRadius: "6px", marginBottom: "22px", background: "#f8fafc", fontFamily: "sans-serif" }}>
-                  <strong>Instructions:</strong> Answer all sections as per regulations. Draw neat diagrams wherever necessary. All dimensions are in mm unless specified otherwise.
+                <div style={{ fontSize: "11px", fontStyle: "italic", border: "1px dashed #cbd5e1", padding: "6px 12px", borderRadius: "6px", marginBottom: "16px", background: "#f8fafc", fontFamily: "sans-serif" }}>
+                  <strong>Instructions:</strong> Answer all sections as per SOP regulations. Draw neat diagrams wherever necessary. All dimensions are in mm unless specified otherwise.
                 </div>
 
                 {/* PART A: MCQ & Short Answer Questions */}
                 {finalMcqs.length > 0 && (
-                  <div style={{ marginBottom: "26px" }}>
-                    <div className="part-header" style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
-                      <strong style={{ fontSize: "14px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
+                  <div style={{ marginBottom: "22px" }}>
+                    <div className="part-header" style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "3px", marginBottom: "12px" }}>
+                      <strong style={{ fontSize: "13px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
                         PART — A (MULTIPLE CHOICE & SHORT ANSWER QUESTIONS)
                       </strong>
-                      <div style={{ fontSize: "11.5px", fontFamily: "sans-serif", color: "#475569", marginTop: "2px" }}>
+                      <div style={{ fontSize: "11px", fontFamily: "sans-serif", color: "#475569", marginTop: "1px" }}>
                         Answer ALL Questions ({finalMcqs.length} × 2 = {finalMcqs.length * 2} Marks)
                       </div>
                     </div>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                       {finalMcqs.map((q, idx) => (
-                        <div key={q.id || idx} className="question-block" style={{ fontSize: "13.5px" }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
+                        <div key={q.id || idx} className="question-block" style={{ fontSize: "12.5px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "14px" }}>
                             <div style={{ flex: 1 }}>
                               <strong>Q{idx + 1}.</strong> {cleanQuestionText(q.question)}
                             </div>
-                            <div style={{ fontWeight: 700, flexShrink: 0, fontSize: "13px" }}>[2]</div>
+                            <div style={{ fontWeight: 700, flexShrink: 0, fontSize: "12px" }}>[2]</div>
                           </div>
 
                           {q.options && q.options.length > 0 && (
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px", marginTop: "8px", marginLeft: "20px", fontSize: "12.5px", fontFamily: "sans-serif" }}>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px", marginTop: "6px", marginLeft: "18px", fontSize: "11.5px", fontFamily: "sans-serif" }}>
                               {q.options.map((opt: string, optIdx: number) => (
                                 <div key={optIdx}>
                                   <strong>({String.fromCharCode(65 + optIdx)})</strong> {opt}
@@ -569,7 +558,7 @@ export default function PrintPaperPage() {
                             </div>
                           )}
 
-                          <div style={{ display: "flex", gap: "12px", fontSize: "10.5px", color: "#64748b", fontFamily: "sans-serif", marginTop: "4px", marginLeft: "20px" }}>
+                          <div style={{ display: "flex", gap: "10px", fontSize: "10px", color: "#64748b", fontFamily: "sans-serif", marginTop: "3px", marginLeft: "18px" }}>
                             <span>Unit: {q.unit || "Unit I"}</span>
                             {q.bloomLevel && <span>Bloom's: {q.bloomLevel}</span>}
                             <span>CO: CO{(idx % 4) + 1}</span>
@@ -582,27 +571,27 @@ export default function PrintPaperPage() {
 
                 {/* PART B: Descriptive Questions */}
                 {finalDescriptives.length > 0 && (
-                  <div style={{ marginBottom: "26px" }}>
-                    <div className="part-header" style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
-                      <strong style={{ fontSize: "14px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
+                  <div style={{ marginBottom: "22px" }}>
+                    <div className="part-header" style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "3px", marginBottom: "12px" }}>
+                      <strong style={{ fontSize: "13px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
                         PART — B (DESCRIPTIVE & ANALYTICAL QUESTIONS)
                       </strong>
-                      <div style={{ fontSize: "11.5px", fontFamily: "sans-serif", color: "#475569", marginTop: "2px" }}>
+                      <div style={{ fontSize: "11px", fontFamily: "sans-serif", color: "#475569", marginTop: "1px" }}>
                         Answer ALL Questions ({finalDescriptives.length} × 5 = {finalDescriptives.length * 5} Marks)
                       </div>
                     </div>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                       {finalDescriptives.map((q, idx) => (
-                        <div key={q.id || idx} className="question-block" style={{ fontSize: "13.5px" }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
+                        <div key={q.id || idx} className="question-block" style={{ fontSize: "12.5px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "14px" }}>
                             <div style={{ flex: 1 }}>
                               <strong>Q{finalMcqs.length + idx + 1}.</strong> {cleanQuestionText(q.question)}
                             </div>
-                            <div style={{ fontWeight: 700, flexShrink: 0, fontSize: "13px" }}>[5]</div>
+                            <div style={{ fontWeight: 700, flexShrink: 0, fontSize: "12px" }}>[5]</div>
                           </div>
 
-                          <div style={{ display: "flex", gap: "12px", fontSize: "10.5px", color: "#64748b", fontFamily: "sans-serif", marginTop: "4px", marginLeft: "20px" }}>
+                          <div style={{ display: "flex", gap: "10px", fontSize: "10px", color: "#64748b", fontFamily: "sans-serif", marginTop: "3px", marginLeft: "18px" }}>
                             <span>Unit: {q.unit || "Unit II"}</span>
                             {q.bloomLevel && <span>Bloom's: {q.bloomLevel}</span>}
                             <span>CO: CO{(idx % 4) + 1}</span>
@@ -615,36 +604,36 @@ export default function PrintPaperPage() {
 
                 {/* PART C: Diagram / Problem-Solving Questions */}
                 {finalDiagrams.length > 0 && (
-                  <div style={{ marginBottom: "26px" }}>
-                    <div className="part-header" style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
-                      <strong style={{ fontSize: "14px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
+                  <div style={{ marginBottom: "22px" }}>
+                    <div className="part-header" style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "3px", marginBottom: "12px" }}>
+                      <strong style={{ fontSize: "13px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
                         PART — C (PROBLEM SOLVING & DIAGRAM-BASED QUESTIONS)
                       </strong>
-                      <div style={{ fontSize: "11.5px", fontFamily: "sans-serif", color: "#475569", marginTop: "2px" }}>
+                      <div style={{ fontSize: "11px", fontFamily: "sans-serif", color: "#475569", marginTop: "1px" }}>
                         Answer ALL Questions ({finalDiagrams.length} × 10 = {finalDiagrams.length * 10} Marks)
                       </div>
                     </div>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: "22px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                       {finalDiagrams.map((q, idx) => (
-                        <div key={q.id || idx} className="question-block" style={{ fontSize: "13.5px" }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
+                        <div key={q.id || idx} className="question-block" style={{ fontSize: "12.5px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "14px" }}>
                             <div style={{ flex: 1 }}>
                               <strong>Q{finalMcqs.length + finalDescriptives.length + idx + 1}.</strong> {cleanQuestionText(q.question)}
                             </div>
-                            <div style={{ fontWeight: 700, flexShrink: 0, fontSize: "13px" }}>[{q.marks || 10}]</div>
+                            <div style={{ fontWeight: 700, flexShrink: 0, fontSize: "12px" }}>[{q.marks || 10}]</div>
                           </div>
 
                           {(q.imageUrl || (q as any).raw?.imageUrl) && (
-                            <div style={{ marginTop: "8px", marginLeft: "20px", textAlign: "center", border: "1px solid #e2e8f0", padding: "8px", borderRadius: "8px", background: "#fafafa" }}>
-                              <img src={q.imageUrl || (q as any).raw?.imageUrl} alt="Question Diagram" style={{ maxHeight: "170px", maxWidth: "100%", objectFit: "contain" }} />
-                              <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px", fontStyle: "italic" }}>
+                            <div style={{ marginTop: "6px", marginLeft: "18px", textAlign: "center", border: "1px solid #e2e8f0", padding: "6px", borderRadius: "6px", background: "#fafafa" }}>
+                              <img src={q.imageUrl || (q as any).raw?.imageUrl} alt="Question Diagram" style={{ maxHeight: "135px", maxWidth: "100%", objectFit: "contain" }} />
+                              <div style={{ fontSize: "10.5px", color: "#64748b", marginTop: "3px", fontStyle: "italic" }}>
                                 Figure Q{finalMcqs.length + finalDescriptives.length + idx + 1}: {q.diagramTitle || "Engineering Diagram"}
                               </div>
                             </div>
                           )}
 
-                          <div style={{ display: "flex", gap: "12px", fontSize: "10.5px", color: "#64748b", fontFamily: "sans-serif", marginTop: "4px", marginLeft: "20px" }}>
+                          <div style={{ display: "flex", gap: "10px", fontSize: "10px", color: "#64748b", fontFamily: "sans-serif", marginTop: "3px", marginLeft: "18px" }}>
                             <span>Unit: {q.unit || "Unit III"}</span>
                             {q.bloomLevel && <span>Bloom's: {q.bloomLevel}</span>}
                             <span>CO: CO{(idx % 4) + 1}</span>

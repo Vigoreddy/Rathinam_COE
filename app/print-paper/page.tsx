@@ -149,7 +149,7 @@ export default function PrintPaperPage() {
           @media print {
             @page {
               size: A4 portrait;
-              margin: 15mm 15mm 15mm 15mm;
+              margin: 12mm 15mm 12mm 15mm;
             }
             html, body {
               background: #ffffff !important;
@@ -157,22 +157,28 @@ export default function PrintPaperPage() {
               padding: 0 !important;
               width: 100% !important;
               height: auto !important;
+              min-height: 0 !important;
+              max-height: none !important;
               overflow: visible !important;
               font-size: 11pt !important;
             }
-            .no-print, aside, header, footer, nav {
+            .no-print, aside, header, footer, nav, button, [role="status"] {
               display: none !important;
+              height: 0 !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              overflow: hidden !important;
             }
             .print-layout-container {
               display: block !important;
               width: 100% !important;
               margin: 0 !important;
               padding: 0 !important;
+              height: auto !important;
+              min-height: 0 !important;
             }
             #official-printable-paper {
-              position: relative !important;
-              left: 0 !important;
-              top: 0 !important;
+              position: static !important;
               width: 100% !important;
               max-width: 100% !important;
               padding: 0 !important;
@@ -180,14 +186,24 @@ export default function PrintPaperPage() {
               box-shadow: none !important;
               border: none !important;
               background: #ffffff !important;
+              page-break-after: avoid;
+              break-after: avoid;
             }
             .question-block {
               page-break-inside: avoid;
               break-inside: avoid;
+              margin-bottom: 12px !important;
             }
             .part-header {
               page-break-after: avoid;
               break-after: avoid;
+              margin-top: 14px !important;
+              margin-bottom: 10px !important;
+            }
+            .end-paper-footer {
+              page-break-before: avoid;
+              break-before: avoid;
+              margin-top: 20px !important;
             }
           }
         `}</style>
@@ -628,8 +644,8 @@ export default function PrintPaperPage() {
                           </div>
 
                           {(q.imageUrl || (q as any).raw?.imageUrl) && (
-                            <div style={{ marginTop: "10px", marginLeft: "20px", textAlign: "center", border: "1px solid #e2e8f0", padding: "10px", borderRadius: "8px", background: "#fafafa" }}>
-                              <img src={q.imageUrl || (q as any).raw?.imageUrl} alt="Question Diagram" style={{ maxHeight: "220px", maxWidth: "100%", objectFit: "contain" }} />
+                            <div style={{ marginTop: "8px", marginLeft: "20px", textAlign: "center", border: "1px solid #e2e8f0", padding: "8px", borderRadius: "8px", background: "#fafafa" }}>
+                              <img src={q.imageUrl || (q as any).raw?.imageUrl} alt="Question Diagram" style={{ maxHeight: "170px", maxWidth: "100%", objectFit: "contain" }} />
                               <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px", fontStyle: "italic" }}>
                                 Figure Q{finalMcqs.length + finalDescriptives.length + idx + 1}: {q.diagramTitle || "Engineering Diagram"}
                               </div>
@@ -648,7 +664,7 @@ export default function PrintPaperPage() {
                 )}
 
                 {/* Footer Specification */}
-                <div style={{ textAlign: "center", marginTop: "36px", borderTop: "1px solid #cbd5e1", paddingTop: "14px", fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px" }}>
+                <div className="end-paper-footer" style={{ textAlign: "center", marginTop: "24px", borderTop: "1px solid #cbd5e1", paddingTop: "12px", fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px" }}>
                   *** END OF QUESTION PAPER ***
                 </div>
               </div>

@@ -105,9 +105,11 @@ export function hasPermission(role: UserRole, route: string, isSubjectFaculty: b
       if (role === "COE") return true;
       return false; // STAFF, HOD, DEAN denied
 
+    case "/print-paper":
+      return role === "COE"; // ONLY COE (Controller of Examinations) can print question papers
+
     case "/notifications":
     case "/settings":
-    case "/print-paper":
       return true; // All roles
 
     default:

@@ -99,6 +99,10 @@ export default function PrintPaperPage() {
     setTimeout(() => setToast((prev) => ({ ...prev, isVisible: false })), 3000);
   };
 
+  const cleanQuestionText = (text: string) => {
+    return (text || "").replace(/\s*\(Question\s*#\d+\)/gi, "").trim();
+  };
+
   // Filter Questions based on subject selection
   const subjectQs = allQuestions.filter((q) => {
     const qSubj = (q.subject || "").trim().toLowerCase();
@@ -143,24 +147,47 @@ export default function PrintPaperPage() {
       >
         <style>{`
           @media print {
-            body * {
-              visibility: hidden;
+            @page {
+              size: A4 portrait;
+              margin: 15mm 15mm 15mm 15mm;
             }
-            #official-printable-paper, #official-printable-paper * {
-              visibility: visible;
+            html, body {
+              background: #ffffff !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              width: 100% !important;
+              height: auto !important;
+              overflow: visible !important;
+              font-size: 11pt !important;
+            }
+            .no-print, aside, header, footer, nav {
+              display: none !important;
+            }
+            .print-layout-container {
+              display: block !important;
+              width: 100% !important;
+              margin: 0 !important;
+              padding: 0 !important;
             }
             #official-printable-paper {
-              position: absolute;
-              left: 0;
-              top: 0;
+              position: relative !important;
+              left: 0 !important;
+              top: 0 !important;
               width: 100% !important;
+              max-width: 100% !important;
               padding: 0 !important;
               margin: 0 !important;
               box-shadow: none !important;
               border: none !important;
+              background: #ffffff !important;
             }
-            .no-print {
-              display: none !important;
+            .question-block {
+              page-break-inside: avoid;
+              break-inside: avoid;
+            }
+            .part-header {
+              page-break-after: avoid;
+              break-after: avoid;
             }
           }
         `}</style>
@@ -278,7 +305,7 @@ export default function PrintPaperPage() {
             </div>
 
             {/* Grid Layout: Configurator Controls (Left) & Live Word Paper Preview (Right) */}
-            <div style={{ display: "grid", gridTemplateColumns: "360px 1fr", gap: "22px", alignItems: "start" }}>
+            <div className="print-layout-container" style={{ display: "grid", gridTemplateColumns: "360px 1fr", gap: "22px", alignItems: "start" }}>
               {/* Left Configurator Column */}
               <div className="no-print" style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "16px", padding: "20px", boxShadow: "0 4px 12px rgba(0,0,0,0.03)", display: "flex", flexDirection: "column", gap: "18px" }}>
                 <div style={{ fontSize: "15px", fontWeight: 800, color: "#1e293b", display: "flex", alignItems: "center", gap: "8px", borderBottom: "1px solid #f1f5f9", paddingBottom: "12px" }}>
@@ -505,7 +532,7 @@ export default function PrintPaperPage() {
                 {/* PART A: MCQ & Short Answer Questions */}
                 {finalMcqs.length > 0 && (
                   <div style={{ marginBottom: "26px" }}>
-                    <div style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
+                    <div className="part-header" style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
                       <strong style={{ fontSize: "14px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
                         PART — A (MULTIPLE CHOICE & SHORT ANSWER QUESTIONS)
                       </strong>
@@ -516,10 +543,10 @@ export default function PrintPaperPage() {
 
                     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                       {finalMcqs.map((q, idx) => (
-                        <div key={q.id || idx} style={{ fontSize: "13.5px" }}>
+                        <div key={q.id || idx} className="question-block" style={{ fontSize: "13.5px" }}>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
                             <div style={{ flex: 1 }}>
-                              <strong>Q{idx + 1}.</strong> {q.question}
+                              <strong>Q{idx + 1}.</strong> {cleanQuestionText(q.question)}
                             </div>
                             <div style={{ fontWeight: 700, flexShrink: 0, fontSize: "13px" }}>[2]</div>
                           </div>
@@ -548,7 +575,7 @@ export default function PrintPaperPage() {
                 {/* PART B: Descriptive Questions */}
                 {finalDescriptives.length > 0 && (
                   <div style={{ marginBottom: "26px" }}>
-                    <div style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
+                    <div className="part-header" style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
                       <strong style={{ fontSize: "14px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
                         PART — B (DESCRIPTIVE & ANALYTICAL QUESTIONS)
                       </strong>
@@ -559,10 +586,10 @@ export default function PrintPaperPage() {
 
                     <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
                       {finalDescriptives.map((q, idx) => (
-                        <div key={q.id || idx} style={{ fontSize: "13.5px" }}>
+                        <div key={q.id || idx} className="question-block" style={{ fontSize: "13.5px" }}>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
                             <div style={{ flex: 1 }}>
-                              <strong>Q{finalMcqs.length + idx + 1}.</strong> {q.question}
+                              <strong>Q{finalMcqs.length + idx + 1}.</strong> {cleanQuestionText(q.question)}
                             </div>
                             <div style={{ fontWeight: 700, flexShrink: 0, fontSize: "13px" }}>[5]</div>
                           </div>
@@ -581,7 +608,7 @@ export default function PrintPaperPage() {
                 {/* PART C: Diagram / Problem-Solving Questions */}
                 {finalDiagrams.length > 0 && (
                   <div style={{ marginBottom: "26px" }}>
-                    <div style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
+                    <div className="part-header" style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
                       <strong style={{ fontSize: "14px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
                         PART — C (PROBLEM SOLVING & DIAGRAM-BASED QUESTIONS)
                       </strong>
@@ -592,10 +619,10 @@ export default function PrintPaperPage() {
 
                     <div style={{ display: "flex", flexDirection: "column", gap: "22px" }}>
                       {finalDiagrams.map((q, idx) => (
-                        <div key={q.id || idx} style={{ fontSize: "13.5px" }}>
+                        <div key={q.id || idx} className="question-block" style={{ fontSize: "13.5px" }}>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
                             <div style={{ flex: 1 }}>
-                              <strong>Q{finalMcqs.length + finalDescriptives.length + idx + 1}.</strong> {q.question}
+                              <strong>Q{finalMcqs.length + finalDescriptives.length + idx + 1}.</strong> {cleanQuestionText(q.question)}
                             </div>
                             <div style={{ fontWeight: 700, flexShrink: 0, fontSize: "13px" }}>[{q.marks || 10}]</div>
                           </div>

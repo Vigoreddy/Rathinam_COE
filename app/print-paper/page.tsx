@@ -626,15 +626,16 @@ export default function PrintPaperPage() {
                   </div>
                 </div>
 
-                {/* Time & Max Marks Row */}
+                {/* Time & Max Marks Row with K-Scheme Indicator */}
                 <div style={{ borderTop: "1.5px solid #000000", borderBottom: "1.5px solid #000000", padding: "4px 8px", display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: "bold", marginBottom: "14px", fontFamily: "sans-serif" }}>
                   <span>Time: {duration}</span>
+                  <span>Scheme: K-Syllabus (COE Autonomous 2024-2025)</span>
                   <span>Maximum: {maxMarks} Marks</span>
                 </div>
 
                 {/* General Instructions */}
                 <div style={{ fontSize: "11px", fontStyle: "italic", border: "1px dashed #cbd5e1", padding: "6px 12px", borderRadius: "6px", marginBottom: "16px", background: "#f8fafc", fontFamily: "sans-serif" }}>
-                  <strong>Instructions:</strong> Answer all sections as per SOP regulations. Draw neat diagrams wherever necessary. All dimensions are in mm unless specified otherwise.
+                  <strong>Instructions:</strong> Answer all sections as per COE K-Scheme regulations. Draw neat diagrams wherever necessary. All dimensions are in mm unless specified otherwise.
                 </div>
 
                 {/* PART A: MCQ & Short Answer Questions */}

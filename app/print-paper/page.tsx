@@ -80,16 +80,16 @@ export default function PrintPaperPage() {
   const rawSubjects = Array.from(new Set(allQuestions.map((q) => (q.subject || "ENGINEERING GRAPHICS").trim())));
   const subjectsList = ["All Subjects (Complete Question Bank)", ...rawSubjects];
   const [selectedSubject, setSelectedSubject] = useState<string>("ENGINEERING GRAPHICS");
-  const [printMode, setPrintMode] = useState<"all" | "custom">("all");
+  const [printMode, setPrintMode] = useState<"all" | "custom">("custom");
   const [examType, setExamType] = useState<string>("End Semester Examination (Regular)");
   const [maxMarks, setMaxMarks] = useState<number>(100);
   const [duration, setDuration] = useState<string>("3 Hours");
   const [semesterYear, setSemesterYear] = useState<string>("IV Semester / Academic Year 2024-2025");
 
-  // Quantity Sliders / Inputs (Custom mode)
-  const [mcqCount, setMcqCount] = useState<number>(10);
-  const [descriptiveCount, setDescriptiveCount] = useState<number>(5);
-  const [diagramCount, setDiagramCount] = useState<number>(5);
+  // Quantity Sliders / Inputs (Custom mode) - Initialized to ZERO as requested
+  const [mcqCount, setMcqCount] = useState<number>(0);
+  const [descriptiveCount, setDescriptiveCount] = useState<number>(0);
+  const [diagramCount, setDiagramCount] = useState<number>(0);
 
   const [toast, setToast] = useState<{ message: string; isVisible: boolean; type?: "success" | "danger" }>({
     message: "",
@@ -554,8 +554,31 @@ export default function PrintPaperPage() {
                   )}
                 </div>
 
-                <div style={{ background: "#f8fafc", padding: "12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "11.5px", color: "#64748b" }}>
-                  <strong>Summary:</strong> Total <strong>{totalQuestionsInPaper}</strong> questions selected from bank for <strong>{selectedSubject}</strong>.
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#f8fafc", padding: "12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "11.5px", color: "#64748b" }}>
+                  <div>
+                    <strong>Summary:</strong> Total <strong>{totalQuestionsInPaper}</strong> questions selected from bank for <strong>{selectedSubject}</strong>.
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMcqCount(0);
+                      setDescriptiveCount(0);
+                      setDiagramCount(0);
+                    }}
+                    style={{
+                      padding: "4px 8px",
+                      borderRadius: "6px",
+                      border: "1px solid #cbd5e1",
+                      background: "#ffffff",
+                      fontSize: "10.5px",
+                      fontWeight: 700,
+                      color: "#dc2626",
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Reset to 0
+                  </button>
                 </div>
 
                 <button

@@ -268,11 +268,11 @@ export default function ManualQuestionsPage() {
 
   const [sopConfig, setSopConfig] = useState({
     department: "B.SC VISUAL COMMUNICATION & E-MEDIA",
-    subjectName: "AUGMENTED REALITY THEORY",
-    subjectCode: "23BSV6CA",
-    qpCode: "252S037",
-    semester: "SEMESTER - VI",
-    semesterType: "EVEN", // "EVEN" or "ODD"
+    subjectName: "ENGINEERING GRAPHICS",
+    subjectCode: "23BEG101",
+    qpCode: "252S099",
+    semester: "SEMESTER - I",
+    semesterType: "ODD", // "EVEN" or "ODD"
     examMonthYear: "JULY - 2026",
     examType: "SUPPLEMENTARY EXAMINATIONS",
     timeHours: "3 Hours",

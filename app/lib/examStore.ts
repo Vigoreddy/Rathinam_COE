@@ -555,8 +555,8 @@ export const examStore = {
 
     return raw.map((q, idx) => {
       let cleanSubj = (q.subject || "").trim();
-      if (!cleanSubj || cleanSubj.toLowerCase() === "viscom & vfx" || cleanSubj.toLowerCase() === "viscom") {
-        cleanSubj = "AUGMENTED REALITY THEORY";
+      if (!cleanSubj) {
+        cleanSubj = "ENGINEERING GRAPHICS";
       }
 
       let marksVal = Number(q.marks);

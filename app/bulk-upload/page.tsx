@@ -407,11 +407,23 @@ export default function BulkUploadPage() {
       const rawText = await extractFileText(file);
       let importedQuestionsCount = 0;
 
+      // Determine default subject from filter selection, file name, or available subjects list
+      const cleanFileName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ").trim();
+      let defaultSubj = "ENGINEERING GRAPHICS";
+      if (selectedSubject && selectedSubject !== "all") {
+        defaultSubj = selectedSubject;
+      } else if (cleanFileName.length > 2 && !/^(questions?|document|upload|file|sheet|data)$/i.test(cleanFileName)) {
+        defaultSubj = cleanFileName.toUpperCase();
+      } else if (subjectsList.length > 0) {
+        defaultSubj = subjectsList[0].name;
+      }
+
+      let currentSubject = defaultSubj;
+
       if (rawText && rawText.trim().length > 0) {
         const cleanedText = cleanRawSyllabusText(rawText);
         const lines = cleanedText.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 0);
 
-        let currentSubject = "AUGMENTED REALITY THEORY";
         let currentUnit = "Unit I";
         let currentQuestion = "";
         let currentMarks = 10;
@@ -453,7 +465,10 @@ export default function BulkUploadPage() {
 
           // Check for Subject header
           if (/subject\s*:\s*(.*)/i.test(line)) {
-            currentSubject = line.replace(/subject\s*:\s*/i, "").trim().toUpperCase();
+            const extractedSubj = line.replace(/subject\s*:\s*/i, "").trim();
+            if (extractedSubj) {
+              currentSubject = extractedSubj.toUpperCase();
+            }
             continue;
           }
 
@@ -496,7 +511,7 @@ export default function BulkUploadPage() {
         for (let i = 1; i <= importedQuestionsCount; i++) {
           examStore.saveQuestion({
             question: `${i}. List and explain the key principles and concepts extracted from "${file.name}" (Question #${i}).`,
-            subject: "AUGMENTED REALITY THEORY",
+            subject: currentSubject,
             unit: "Unit I",
             topic: "Document Question",
             type: "Descriptive",
@@ -515,7 +530,7 @@ export default function BulkUploadPage() {
       examStore.saveUpload({
         name: file.name,
         type: fileType,
-        subject: "AUGMENTED REALITY THEORY",
+        subject: currentSubject,
         unit: "Unit I - V",
         totalQuestions: importedQuestionsCount,
         uploadedBy: currentUser.name || "Faculty",

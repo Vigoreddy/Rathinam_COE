@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Rathinam Group of Institutions | Exam Cell Login",
+  title: "Rathinam Global (Deemed to be University) | Exam Cell",
   description: "Academic Management Platform - Manage Academics. Simplify Exams.",
 };
 

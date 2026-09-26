@@ -561,7 +561,7 @@ export default function SyllabusPage() {
               </div>
               <div>
                 <strong style={{ display: "block", fontSize: "12.5px", color: "#0f172a", fontWeight: 700, whiteSpace: "nowrap" }}>
-                  Rathinam Global Deemed To Be University
+                  Rathinam Global (Deemed to be University)
                 </strong>
                 <span style={{ fontSize: "11px", color: "#64748b", whiteSpace: "nowrap" }}>Coimbatore, Tamil Nadu</span>
               </div>

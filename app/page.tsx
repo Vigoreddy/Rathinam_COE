@@ -279,7 +279,7 @@ export default function LoginPage() {
           >
             <img
               src="/images/rathinam-logo.svg"
-              alt="Rathinam Group of Institutions Exam Cell"
+              alt="Rathinam Global (Deemed to be University) Exam Cell"
               className="drop-shadow-lg hover:scale-105 transition-transform duration-300"
             />
           </motion.div>

@@ -28,7 +28,7 @@ import SidebarUserProfile from "../components/SidebarUserProfile";
 const institutions = [
   {
     id: "rgu",
-    name: "Rathinam Global Deemed To Be University",
+    name: "Rathinam Global (Deemed to be University)",
     location: "Coimbatore, Tamil Nadu",
     est: "Est. 2006",
     color: "radial-gradient(circle at 35% 30%, #818cf8 0%, #4f46e5 45%, #1e1b4b 100%)",

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { X, Trash2, Edit3, Eye, CheckCircle2, AlertTriangle, Save, Info, Sparkles, Check } from "lucide-react";
+import { X, Trash2, Edit3, Eye, CheckCircle2, AlertTriangle, Save, Info, Sparkles, Check, FileText, Printer, Layers, School, FileCheck } from "lucide-react";
 
 // ======================== VIEW MODAL ========================
 export interface ViewField {
@@ -41,6 +41,8 @@ export function ViewModal({
   verifyLabel = "Verify Question",
   questionsList,
 }: ViewModalProps) {
+  const [viewMode, setViewMode] = useState<"word" | "cards">("word");
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -99,7 +101,44 @@ export function ViewModal({
     return null;
   }, [badge, badgeColor]);
 
+  // Print function for internal paper document preview
+  const handlePrintDocument = () => {
+    const printContent = document.getElementById("word-document-preview-area");
+    if (!printContent) return;
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>${title} - Question Paper Document</title>
+          <style>
+            body { font-family: 'Times New Roman', Georgia, serif; padding: 40px; color: #000; background: #fff; }
+            .no-print { display: none !important; }
+            h1, h2, h3 { text-align: center; margin: 4px 0; }
+            table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+            td, th { border: 1px solid #000; padding: 6px 10px; font-size: 13px; }
+            .section-header { font-weight: bold; margin-top: 18px; border-bottom: 2px solid #000; padding-bottom: 4px; }
+            .q-item { margin-bottom: 14px; page-break-inside: avoid; }
+            .q-marks { float: right; font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          ${printContent.innerHTML}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 400);
+  };
+
   if (!isOpen) return null;
+
+  // Extract subject title if available
+  const detectedSubject = title.split("-")[0]?.trim() || "Question Paper";
 
   return (
     <div
@@ -120,8 +159,8 @@ export function ViewModal({
         className="crud-modal-box"
         style={{
           width: "100%",
-          maxWidth: questionsList && questionsList.length > 0 ? "760px" : "640px",
-          maxHeight: "88vh",
+          maxWidth: questionsList && questionsList.length > 0 ? "820px" : "680px",
+          maxHeight: "90vh",
           background: "#ffffff",
           borderRadius: "20px",
           boxShadow: "0 25px 60px -15px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(226, 232, 240, 0.8)",
@@ -134,12 +173,14 @@ export function ViewModal({
         {/* Header */}
         <div
           style={{
-            padding: "20px 24px",
+            padding: "18px 24px",
             borderBottom: "1px solid #f1f5f9",
             display: "flex",
-            alignItems: "flex-start",
+            alignItems: "center",
             justifyContent: "space-between",
             background: "linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)",
+            gap: "12px",
+            flexWrap: "wrap",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -160,7 +201,7 @@ export function ViewModal({
             </div>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                <h3 style={{ margin: 0, fontSize: "17px", fontWeight: 700, color: "#0f172a" }}>
+                <h3 style={{ margin: 0, fontSize: "16.5px", fontWeight: 700, color: "#0f172a" }}>
                   {title}
                 </h3>
                 {normalizedBadge && (
@@ -179,34 +220,119 @@ export function ViewModal({
                 )}
               </div>
               {subtitle && (
-                <p style={{ margin: "4px 0 0", fontSize: "12.5px", color: "#64748b" }}>
+                <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#64748b" }}>
                   {subtitle}
                 </p>
               )}
             </div>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            style={{
-              width: "32px",
-              height: "32px",
-              borderRadius: "8px",
-              border: "1px solid #e2e8f0",
-              background: "#ffffff",
-              color: "#64748b",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <X size={16} />
-          </button>
+
+          {/* Mode Selector Switcher + Print & Close */}
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            {questionsList && questionsList.length > 0 && (
+              <div
+                style={{
+                  display: "inline-flex",
+                  background: "#f1f5f9",
+                  borderRadius: "10px",
+                  padding: "3px",
+                  border: "1px solid #e2e8f0",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setViewMode("word")}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "5px",
+                    padding: "6px 12px",
+                    borderRadius: "8px",
+                    border: "none",
+                    background: viewMode === "word" ? "#ffffff" : "transparent",
+                    color: viewMode === "word" ? "#2563eb" : "#64748b",
+                    fontWeight: viewMode === "word" ? 700 : 500,
+                    fontSize: "12px",
+                    cursor: "pointer",
+                    boxShadow: viewMode === "word" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  <FileText size={14} />
+                  <span>📄 Word Document</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("cards")}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "5px",
+                    padding: "6px 12px",
+                    borderRadius: "8px",
+                    border: "none",
+                    background: viewMode === "cards" ? "#ffffff" : "transparent",
+                    color: viewMode === "cards" ? "#2563eb" : "#64748b",
+                    fontWeight: viewMode === "cards" ? 700 : 500,
+                    fontSize: "12px",
+                    cursor: "pointer",
+                    boxShadow: viewMode === "cards" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  <Layers size={14} />
+                  <span>📋 Card View</span>
+                </button>
+              </div>
+            )}
+
+            {questionsList && questionsList.length > 0 && viewMode === "word" && (
+              <button
+                type="button"
+                onClick={handlePrintDocument}
+                title="Print / View Fullscreen Internal Paper"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  padding: "6px 12px",
+                  borderRadius: "8px",
+                  border: "1px solid #cbd5e1",
+                  background: "#ffffff",
+                  color: "#334155",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                <Printer size={14} />
+                <span>Print Paper</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={onClose}
+              style={{
+                width: "32px",
+                height: "32px",
+                borderRadius: "8px",
+                border: "1px solid #e2e8f0",
+                background: "#ffffff",
+                color: "#64748b",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <X size={16} />
+            </button>
+          </div>
         </div>
 
         {/* Content Body */}
-        <div style={{ padding: "24px", overflowY: "auto", flex: 1 }}>
+        <div style={{ padding: "20px 24px", overflowY: "auto", flex: 1, background: viewMode === "word" && questionsList && questionsList.length > 0 ? "#f8fafc" : "#ffffff" }}>
           {normalizedFields.length === 0 && (!questionsList || questionsList.length === 0) ? (
             <div style={{ padding: "30px", textAlign: "center", color: "#94a3b8", fontSize: "13px" }}>
               No specific details available for this record.
@@ -227,10 +353,10 @@ export function ViewModal({
                       key={i}
                       style={{
                         gridColumn: f.spanFull ? "span 2" : "span 1",
-                        background: "#f8fafc",
+                        background: "#ffffff",
                         borderRadius: "12px",
                         padding: "12px 14px",
-                        border: "1px solid #f1f5f9",
+                        border: "1px solid #e2e8f0",
                       }}
                     >
                       <div
@@ -295,8 +421,164 @@ export function ViewModal({
                 </div>
               )}
 
-              {/* Parsed Questions Preview Section */}
-              {questionsList && questionsList.length > 0 && (
+              {/* ================= WORD DOCUMENT PAPER PREVIEW (Internal Format) ================= */}
+              {questionsList && questionsList.length > 0 && viewMode === "word" && (
+                <div
+                  id="word-document-preview-area"
+                  style={{
+                    background: "#ffffff",
+                    border: "1px solid #cbd5e1",
+                    borderRadius: "8px",
+                    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.08)",
+                    padding: "36px 40px",
+                    position: "relative",
+                    overflow: "hidden",
+                    fontFamily: "Georgia, 'Times New Roman', serif",
+                    color: "#0f172a",
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {/* Subtle Diagonal Watermark */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "40%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%) rotate(-30deg)",
+                      fontSize: "36px",
+                      fontWeight: 800,
+                      color: "rgba(226, 232, 240, 0.6)",
+                      whiteSpace: "nowrap",
+                      pointerEvents: "none",
+                      letterSpacing: "4px",
+                      textTransform: "uppercase",
+                      userSelect: "none",
+                    }}
+                  >
+                    CONFIDENTIAL • ACADEMIC INSPECTION
+                  </div>
+
+                  {/* University Header Banner */}
+                  <div style={{ textAlign: "center", borderBottom: "2px double #0f172a", paddingBottom: "16px", marginBottom: "20px" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginBottom: "4px" }}>
+                      <img src="/images/rgu-logo.png" alt="University Logo" style={{ height: "36px", objectFit: "contain" }} />
+                    </div>
+                    <h2 style={{ margin: "4px 0 2px", fontSize: "18px", fontWeight: 800, letterSpacing: "0.5px", textTransform: "uppercase", color: "#0f172a" }}>
+                      RATHINAM GLOBAL UNIVERSITY
+                    </h2>
+                    <div style={{ fontSize: "12px", fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "1px" }}>
+                      OFFICE OF THE CONTROLLER OF EXAMINATIONS
+                    </div>
+                    <div style={{ fontSize: "13px", fontWeight: 700, marginTop: "6px", color: "#1e293b", textTransform: "uppercase" }}>
+                      END SEMESTER EXAMINATIONS — INTERNAL QUESTION PAPER PREVIEW
+                    </div>
+                  </div>
+
+                  {/* Document Metadata Table */}
+                  <table
+                    style={{
+                      width: "100%",
+                      borderCollapse: "collapse",
+                      fontSize: "12.5px",
+                      marginBottom: "20px",
+                      background: "#fafafa",
+                      border: "1px solid #0f172a",
+                      fontFamily: "sans-serif",
+                    }}
+                  >
+                    <tbody>
+                      <tr>
+                        <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 700, width: "15%", background: "#f1f5f9" }}>Course / Subj:</td>
+                        <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 600 }}>{detectedSubject}</td>
+                        <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 700, width: "15%", background: "#f1f5f9" }}>Duration:</td>
+                        <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 600, width: "20%" }}>3 Hours</td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 700, background: "#f1f5f9" }}>Semester/Year:</td>
+                        <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 600 }}>IV Semester / Academic Year 2024-2025</td>
+                        <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 700, background: "#f1f5f9" }}>Max. Marks:</td>
+                        <td style={{ padding: "6px 12px", border: "1px solid #0f172a", fontWeight: 700, color: "#16a34a" }}>100 Marks</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  {/* General Instructions */}
+                  <div style={{ fontSize: "11.5px", fontStyle: "italic", border: "1px dashed #cbd5e1", padding: "8px 14px", borderRadius: "6px", marginBottom: "22px", background: "#f8fafc", fontFamily: "sans-serif" }}>
+                    <strong>General Instructions to Inspection Authority:</strong> This digital paper preview formats questions into Word document specification. Answer all sections as per regulations. All diagrams must be verified for clarity.
+                  </div>
+
+                  {/* Render Question Sections (Part A, Part B, Part C) */}
+                  {[5, 10, 12].map((mVal) => {
+                    const group = questionsList.filter((q) => (Number(q.marks) || 5) === mVal);
+                    if (group.length === 0) return null;
+
+                    const sectionName = mVal === 5 ? "PART — A (Short Answer Questions)" : mVal === 10 ? "PART — B (Descriptive & Problem Solving Questions)" : "PART — C (Analytical & Case Study Questions)";
+
+                    return (
+                      <div key={mVal} style={{ marginBottom: "24px" }}>
+                        <div style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
+                          <strong style={{ fontSize: "14px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
+                            {sectionName}
+                          </strong>
+                          <div style={{ fontSize: "11.5px", fontFamily: "sans-serif", color: "#475569", marginTop: "2px" }}>
+                            Answer ALL Questions ({group.length} × {mVal} = {group.length * mVal} Marks)
+                          </div>
+                        </div>
+
+                        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                          {group.map((q, qIdx) => (
+                            <div key={q.id || qIdx} className="q-item" style={{ fontSize: "13.5px" }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
+                                <div style={{ flex: 1 }}>
+                                  <strong>Q{qIdx + 1}.</strong> {q.question || q.statement}
+                                </div>
+                                <div className="q-marks" style={{ fontWeight: 700, flexShrink: 0, fontSize: "13px" }}>
+                                  [{mVal}]
+                                </div>
+                              </div>
+
+                              {/* MCQ Options if available */}
+                              {q.options && q.options.length > 0 && (
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px", marginTop: "8px", marginLeft: "20px", fontSize: "12.5px", fontFamily: "sans-serif" }}>
+                                  {q.options.map((opt: string, optIdx: number) => (
+                                    <div key={optIdx}>
+                                      <strong>({String.fromCharCode(65 + optIdx)})</strong> {opt}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+
+                              {/* Attached Diagram Image inside Word Paper */}
+                              {(q.imageUrl || q.raw?.imageUrl) && (
+                                <div style={{ marginTop: "10px", marginLeft: "20px", textAlign: "center", border: "1px solid #e2e8f0", padding: "10px", borderRadius: "8px", background: "#fafafa" }}>
+                                  <img src={q.imageUrl || q.raw?.imageUrl} alt="Question Diagram" style={{ maxHeight: "200px", maxWidth: "100%", objectFit: "contain" }} />
+                                  <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px", fontStyle: "italic" }}>
+                                    Figure Q{qIdx + 1}: {q.diagramTitle || "Question Diagram"}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Question Metadata Footer */}
+                              <div style={{ display: "flex", gap: "12px", fontSize: "10.5px", color: "#64748b", fontFamily: "sans-serif", marginTop: "4px", marginLeft: "20px" }}>
+                                <span>Unit: {q.unit || "Unit I"}</span>
+                                {q.bloomLevel && <span>Bloom's: {q.bloomLevel}</span>}
+                                <span>CO: CO{(qIdx % 4) + 1}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  <div style={{ textAlign: "center", marginTop: "30px", borderTop: "1px solid #cbd5e1", paddingTop: "12px", fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px" }}>
+                    *** END OF QUESTION PAPER ***
+                  </div>
+                </div>
+              )}
+
+              {/* Categorized Questions List (Card Mode) */}
+              {questionsList && questionsList.length > 0 && viewMode === "cards" && (
                 <div style={{ marginTop: "6px" }}>
                   <div style={{ fontSize: "13px", fontWeight: 700, color: "#334155", marginBottom: "12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>

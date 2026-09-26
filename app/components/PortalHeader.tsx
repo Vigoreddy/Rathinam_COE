@@ -1357,7 +1357,7 @@ export default function PortalHeader({ activeRoute, onCustomSearch }: PortalHead
             >
               <img
                 src="/images/rgu-logo.png"
-                alt="Rathinam Global University"
+                alt="Rathinam Global (Deemed to be University)"
                 style={{
                   maxHeight: "34px",
                   width: "auto",

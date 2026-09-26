@@ -469,7 +469,7 @@ export default function DashboardPage() {
               </div>
               <div style={{ flexShrink: 0 }}>
                 <strong style={{ display: "block", fontSize: "12.5px", color: "#0f172a", whiteSpace: "nowrap" }}>
-                  Rathinam Global Deemed To Be University
+                  Rathinam Global (Deemed to be University)
                 </strong>
                 <span style={{ fontSize: "11px", color: "#64748b", whiteSpace: "nowrap" }}>Coimbatore, Tamil Nadu</span>
               </div>

@@ -107,6 +107,7 @@ export function hasPermission(role: UserRole, route: string, isSubjectFaculty: b
 
     case "/notifications":
     case "/settings":
+    case "/print-paper":
       return true; // All roles
 
     default:

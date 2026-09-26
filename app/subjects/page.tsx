@@ -14,6 +14,7 @@ import {
   Bell,
   Edit3,
   Settings,
+  Printer,
   Shield,
   ArrowRight,
   Layers,
@@ -81,6 +82,7 @@ export default function SubjectsPage() {
     { id: "reports", label: "Reports", icon: BarChart2, route: "/reports" },
     { id: "notifications", label: "Notifications", icon: Bell, route: "/notifications" },
     { id: "manual-questions", label: "Manual Questions", icon: Edit3, badge: "New", route: "/manual-questions" },
+    { id: "print-paper", label: "Print Question Paper", icon: Printer, badge: "Print", route: "/print-paper" },
     { id: "settings", label: "Settings", icon: Settings, route: "/settings" },
   ];
 

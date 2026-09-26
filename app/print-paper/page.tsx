@@ -77,14 +77,16 @@ export default function PrintPaperPage() {
   }, []);
 
   // Form Controls
-  const subjectsList = Array.from(new Set(allQuestions.map((q) => (q.subject || "ENGINEERING GRAPHICS").trim())));
-  const [selectedSubject, setSelectedSubject] = useState<string>(subjectsList[0] || "ENGINEERING GRAPHICS");
+  const rawSubjects = Array.from(new Set(allQuestions.map((q) => (q.subject || "ENGINEERING GRAPHICS").trim())));
+  const subjectsList = ["All Subjects (Complete Question Bank)", ...rawSubjects];
+  const [selectedSubject, setSelectedSubject] = useState<string>("ENGINEERING GRAPHICS");
+  const [printMode, setPrintMode] = useState<"all" | "custom">("all");
   const [examType, setExamType] = useState<string>("End Semester Examination (Regular)");
   const [maxMarks, setMaxMarks] = useState<number>(100);
   const [duration, setDuration] = useState<string>("3 Hours");
   const [semesterYear, setSemesterYear] = useState<string>("IV Semester / Academic Year 2024-2025");
 
-  // Quantity Sliders / Inputs
+  // Quantity Sliders / Inputs (Custom mode)
   const [mcqCount, setMcqCount] = useState<number>(10);
   const [descriptiveCount, setDescriptiveCount] = useState<number>(5);
   const [diagramCount, setDiagramCount] = useState<number>(5);
@@ -105,22 +107,38 @@ export default function PrintPaperPage() {
 
   // Filter Questions based on subject selection
   const subjectQs = allQuestions.filter((q) => {
+    if (!selectedSubject || selectedSubject.startsWith("All Subjects")) return true;
     const qSubj = (q.subject || "").trim().toLowerCase();
     const target = selectedSubject.trim().toLowerCase();
     return qSubj.includes(target) || target.includes(qSubj);
   });
 
   // Categorize questions
-  const mcqQuestions = subjectQs.filter((q) => q.type === "MCQ" || q.type === "Short Answer" || (q.options && q.options.length > 0)).slice(0, mcqCount);
-  const descriptiveQuestions = subjectQs.filter((q) => q.type === "Descriptive" && (!q.imageUrl && !(q as any).raw?.imageUrl)).slice(0, descriptiveCount);
-  const diagramQuestions = subjectQs.filter((q) => (q.imageUrl || (q as any).raw?.imageUrl || q.type === "Problem Solving")).slice(0, diagramCount);
+  let finalMcqs: QuestionItem[] = [];
+  let finalDescriptives: QuestionItem[] = [];
+  let finalDiagrams: QuestionItem[] = [];
+  let finalOthers: QuestionItem[] = [];
 
-  // If filtered lists are shorter, pull from general subject pool
-  const finalMcqs = mcqQuestions.length > 0 ? mcqQuestions : subjectQs.slice(0, mcqCount);
-  const finalDescriptives = descriptiveQuestions.length > 0 ? descriptiveQuestions : subjectQs.slice(mcqCount, mcqCount + descriptiveCount);
-  const finalDiagrams = diagramQuestions.length > 0 ? diagramQuestions : subjectQs.slice(mcqCount + descriptiveCount, mcqCount + descriptiveCount + diagramCount);
+  if (printMode === "all") {
+    finalMcqs = subjectQs.filter((q) => q.type === "MCQ" || q.type === "Short Answer" || (q.options && q.options.length > 0));
+    finalDescriptives = subjectQs.filter((q) => q.type === "Descriptive" && !q.imageUrl && !(q as any).raw?.imageUrl);
+    finalDiagrams = subjectQs.filter((q) => q.imageUrl || (q as any).raw?.imageUrl || q.type === "Problem Solving");
+    
+    // Any question not in the 3 pools
+    const usedIds = new Set([...finalMcqs, ...finalDescriptives, ...finalDiagrams].map((q) => q.id));
+    finalOthers = subjectQs.filter((q) => !usedIds.has(q.id));
+  } else {
+    const mcqPool = subjectQs.filter((q) => q.type === "MCQ" || q.type === "Short Answer" || (q.options && q.options.length > 0));
+    const descPool = subjectQs.filter((q) => q.type === "Descriptive" && !q.imageUrl && !(q as any).raw?.imageUrl);
+    const diagPool = subjectQs.filter((q) => q.imageUrl || (q as any).raw?.imageUrl || q.type === "Problem Solving");
 
-  const totalQuestionsInPaper = finalMcqs.length + finalDescriptives.length + finalDiagrams.length;
+    finalMcqs = mcqPool.length > 0 ? mcqPool.slice(0, mcqCount) : subjectQs.slice(0, mcqCount);
+    finalDescriptives = descPool.length > 0 ? descPool.slice(0, descriptiveCount) : subjectQs.slice(mcqCount, mcqCount + descriptiveCount);
+    finalDiagrams = diagPool.length > 0 ? diagPool.slice(0, diagramCount) : subjectQs.slice(mcqCount + descriptiveCount, mcqCount + descriptiveCount + diagramCount);
+    finalOthers = [];
+  }
+
+  const totalQuestionsInPaper = finalMcqs.length + finalDescriptives.length + finalDiagrams.length + finalOthers.length;
 
   // Print Action
   const handleTriggerPrint = () => {
@@ -390,57 +408,123 @@ export default function PrintPaperPage() {
                 </div>
 
                 <div style={{ borderTop: "1px dashed #cbd5e1", paddingTop: "14px" }}>
-                  <div style={{ fontSize: "13px", fontWeight: 800, color: "#0f172a", marginBottom: "12px" }}>
-                    📊 Question Type Breakdown Setup:
+                  <div style={{ fontSize: "13px", fontWeight: 800, color: "#0f172a", marginBottom: "10px" }}>
+                    📋 Question Selection Mode:
                   </div>
 
-                  {/* MCQ Questions Slider/Input */}
-                  <div style={{ marginBottom: "14px", background: "#f0f9ff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #bae6fd" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: 700, color: "#0369a1", marginBottom: "4px" }}>
-                      <span>📝 Multiple Choice (MCQ) Questions</span>
-                      <span>{mcqCount} Questions</span>
-                    </div>
+                  {/* Mode Option 1: ALL Questions */}
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "10px 12px",
+                      borderRadius: "10px",
+                      border: printMode === "all" ? "2px solid #2563eb" : "1px solid #cbd5e1",
+                      background: printMode === "all" ? "#eff6ff" : "#ffffff",
+                      marginBottom: "10px",
+                      cursor: "pointer",
+                    }}
+                  >
                     <input
-                      type="range"
-                      min={0}
-                      max={25}
-                      value={mcqCount}
-                      onChange={(e) => setMcqCount(Number(e.target.value))}
-                      style={{ width: "100%", accentColor: "#0284c7" }}
+                      type="radio"
+                      name="printMode"
+                      checked={printMode === "all"}
+                      onChange={() => setPrintMode("all")}
+                      style={{ accentColor: "#2563eb" }}
                     />
-                  </div>
+                    <div>
+                      <div style={{ fontSize: "12.5px", fontWeight: 700, color: "#1e3a8a" }}>
+                        Print ALL Questions in Store ({subjectQs.length} Qs)
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#64748b" }}>
+                        Includes every single question uploaded for {selectedSubject}
+                      </div>
+                    </div>
+                  </label>
 
-                  {/* Descriptive Questions Slider/Input */}
-                  <div style={{ marginBottom: "14px", background: "#f0fdf4", padding: "10px 12px", borderRadius: "10px", border: "1px solid #bbf7d0" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: 700, color: "#15803d", marginBottom: "4px" }}>
-                      <span>✍️ Descriptive / Short Answer Questions</span>
-                      <span>{descriptiveCount} Questions</span>
-                    </div>
+                  {/* Mode Option 2: Custom Question Count */}
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "10px 12px",
+                      borderRadius: "10px",
+                      border: printMode === "custom" ? "2px solid #2563eb" : "1px solid #cbd5e1",
+                      background: printMode === "custom" ? "#eff6ff" : "#ffffff",
+                      marginBottom: "14px",
+                      cursor: "pointer",
+                    }}
+                  >
                     <input
-                      type="range"
-                      min={0}
-                      max={20}
-                      value={descriptiveCount}
-                      onChange={(e) => setDescriptiveCount(Number(e.target.value))}
-                      style={{ width: "100%", accentColor: "#16a34a" }}
+                      type="radio"
+                      name="printMode"
+                      checked={printMode === "custom"}
+                      onChange={() => setPrintMode("custom")}
+                      style={{ accentColor: "#2563eb" }}
                     />
-                  </div>
+                    <div>
+                      <div style={{ fontSize: "12.5px", fontWeight: 700, color: "#1e3a8a" }}>
+                        Custom Question Breakdown Sliders
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#64748b" }}>
+                        Manually choose MCQ, Descriptive, & Diagram counts
+                      </div>
+                    </div>
+                  </label>
 
-                  {/* Diagram Questions Slider/Input */}
-                  <div style={{ marginBottom: "14px", background: "#faf5ff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #e9d5ff" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: 700, color: "#7e22ce", marginBottom: "4px" }}>
-                      <span>📐 Diagram / Figure Attached Questions</span>
-                      <span>{diagramCount} Questions</span>
+                  {printMode === "custom" && (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                      {/* MCQ Questions Slider/Input */}
+                      <div style={{ background: "#f0f9ff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #bae6fd" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: 700, color: "#0369a1", marginBottom: "4px" }}>
+                          <span>📝 Multiple Choice (MCQ) Questions</span>
+                          <span>{mcqCount} Questions</span>
+                        </div>
+                        <input
+                          type="range"
+                          min={0}
+                          max={Math.max(50, subjectQs.length)}
+                          value={mcqCount}
+                          onChange={(e) => setMcqCount(Number(e.target.value))}
+                          style={{ width: "100%", accentColor: "#0284c7" }}
+                        />
+                      </div>
+
+                      {/* Descriptive Questions Slider/Input */}
+                      <div style={{ background: "#f0fdf4", padding: "10px 12px", borderRadius: "10px", border: "1px solid #bbf7d0" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: 700, color: "#15803d", marginBottom: "4px" }}>
+                          <span>✍️ Descriptive / Short Answer Questions</span>
+                          <span>{descriptiveCount} Questions</span>
+                        </div>
+                        <input
+                          type="range"
+                          min={0}
+                          max={Math.max(50, subjectQs.length)}
+                          value={descriptiveCount}
+                          onChange={(e) => setDescriptiveCount(Number(e.target.value))}
+                          style={{ width: "100%", accentColor: "#16a34a" }}
+                        />
+                      </div>
+
+                      {/* Diagram Questions Slider/Input */}
+                      <div style={{ background: "#faf5ff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #e9d5ff" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: 700, color: "#7e22ce", marginBottom: "4px" }}>
+                          <span>📐 Diagram / Figure Attached Questions</span>
+                          <span>{diagramCount} Questions</span>
+                        </div>
+                        <input
+                          type="range"
+                          min={0}
+                          max={Math.max(30, subjectQs.length)}
+                          value={diagramCount}
+                          onChange={(e) => setDiagramCount(Number(e.target.value))}
+                          style={{ width: "100%", accentColor: "#9333ea" }}
+                        />
+                      </div>
                     </div>
-                    <input
-                      type="range"
-                      min={0}
-                      max={15}
-                      value={diagramCount}
-                      onChange={(e) => setDiagramCount(Number(e.target.value))}
-                      style={{ width: "100%", accentColor: "#9333ea" }}
-                    />
-                  </div>
+                  )}
                 </div>
 
                 <div style={{ background: "#f8fafc", padding: "12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "11.5px", color: "#64748b" }}>
@@ -635,6 +719,39 @@ export default function PrintPaperPage() {
 
                           <div style={{ display: "flex", gap: "10px", fontSize: "10px", color: "#64748b", fontFamily: "sans-serif", marginTop: "3px", marginLeft: "18px" }}>
                             <span>Unit: {q.unit || "Unit III"}</span>
+                            {q.bloomLevel && <span>Bloom's: {q.bloomLevel}</span>}
+                            <span>CO: CO{(idx % 4) + 1}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* PART D: Additional Subject Questions */}
+                {finalOthers.length > 0 && (
+                  <div style={{ marginBottom: "22px" }}>
+                    <div className="part-header" style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "3px", marginBottom: "12px" }}>
+                      <strong style={{ fontSize: "13px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
+                        PART — D (ADDITIONAL SUBJECT QUESTIONS)
+                      </strong>
+                      <div style={{ fontSize: "11px", fontFamily: "sans-serif", color: "#475569", marginTop: "1px" }}>
+                        Answer ALL Questions ({finalOthers.length} Questions)
+                      </div>
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                      {finalOthers.map((q, idx) => (
+                        <div key={q.id || idx} className="question-block" style={{ fontSize: "12.5px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "14px" }}>
+                            <div style={{ flex: 1 }}>
+                              <strong>Q{finalMcqs.length + finalDescriptives.length + finalDiagrams.length + idx + 1}.</strong> {cleanQuestionText(q.question)}
+                            </div>
+                            <div style={{ fontWeight: 700, flexShrink: 0, fontSize: "12px" }}>[{q.marks || 5}]</div>
+                          </div>
+
+                          <div style={{ display: "flex", gap: "10px", fontSize: "10px", color: "#64748b", fontFamily: "sans-serif", marginTop: "3px", marginLeft: "18px" }}>
+                            <span>Unit: {q.unit || "Unit IV"}</span>
                             {q.bloomLevel && <span>Bloom's: {q.bloomLevel}</span>}
                             <span>CO: CO{(idx % 4) + 1}</span>
                           </div>

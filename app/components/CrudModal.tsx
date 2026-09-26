@@ -507,69 +507,79 @@ export function ViewModal({
                     <strong>General Instructions to Inspection Authority:</strong> This digital paper preview formats questions into Word document specification. Answer all sections as per regulations. All diagrams must be verified for clarity.
                   </div>
 
-                  {/* Render Question Sections (Part A, Part B, Part C) */}
-                  {[5, 10, 12].map((mVal) => {
-                    const group = questionsList.filter((q) => (Number(q.marks) || 5) === mVal);
-                    if (group.length === 0) return null;
+                  {/* Render Question Sections (Part A, Part B, Part C...) */}
+                  {(() => {
+                    const uniqueMarks = Array.from(
+                      new Set(questionsList.map((q) => Number(q.marks) || 5))
+                    ).sort((a, b) => a - b);
 
-                    const sectionName = mVal === 5 ? "PART — A (Short Answer Questions)" : mVal === 10 ? "PART — B (Descriptive & Problem Solving Questions)" : "PART — C (Analytical & Case Study Questions)";
+                    const letterMap: Record<number, string> = { 2: "A", 5: "B", 10: "C", 12: "D", 15: "E", 16: "F" };
 
-                    return (
-                      <div key={mVal} style={{ marginBottom: "24px" }}>
-                        <div style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
-                          <strong style={{ fontSize: "14px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
-                            {sectionName}
-                          </strong>
-                          <div style={{ fontSize: "11.5px", fontFamily: "sans-serif", color: "#475569", marginTop: "2px" }}>
-                            Answer ALL Questions ({group.length} × {mVal} = {group.length * mVal} Marks)
+                    return uniqueMarks.map((mVal, mIdx) => {
+                      const group = questionsList.filter((q) => (Number(q.marks) || 5) === mVal);
+                      if (group.length === 0) return null;
+
+                      const letter = letterMap[mVal] || String.fromCharCode(65 + mIdx);
+                      const typeDesc = mVal <= 2 ? "Short Answer Questions" : mVal <= 5 ? "Descriptive Questions" : mVal <= 10 ? "Problem Solving & Analytical Questions" : "Case Study & Comprehensive Questions";
+                      const sectionName = `PART — ${letter} (${mVal} Marks ${typeDesc})`;
+
+                      return (
+                        <div key={mVal} style={{ marginBottom: "24px" }}>
+                          <div style={{ textAlign: "center", borderBottom: "1.5px solid #0f172a", paddingBottom: "4px", marginBottom: "14px" }}>
+                            <strong style={{ fontSize: "14px", letterSpacing: "0.5px", textTransform: "uppercase" }}>
+                              {sectionName}
+                            </strong>
+                            <div style={{ fontSize: "11.5px", fontFamily: "sans-serif", color: "#475569", marginTop: "2px" }}>
+                              Answer ALL Questions ({group.length} × {mVal} = {group.length * mVal} Marks)
+                            </div>
                           </div>
-                        </div>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                          {group.map((q, qIdx) => (
-                            <div key={q.id || qIdx} className="q-item" style={{ fontSize: "13.5px" }}>
-                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
-                                <div style={{ flex: 1 }}>
-                                  <strong>Q{qIdx + 1}.</strong> {q.question || q.statement}
-                                </div>
-                                <div className="q-marks" style={{ fontWeight: 700, flexShrink: 0, fontSize: "13px" }}>
-                                  [{mVal}]
-                                </div>
-                              </div>
-
-                              {/* MCQ Options if available */}
-                              {q.options && q.options.length > 0 && (
-                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px", marginTop: "8px", marginLeft: "20px", fontSize: "12.5px", fontFamily: "sans-serif" }}>
-                                  {q.options.map((opt: string, optIdx: number) => (
-                                    <div key={optIdx}>
-                                      <strong>({String.fromCharCode(65 + optIdx)})</strong> {opt}
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-
-                              {/* Attached Diagram Image inside Word Paper */}
-                              {(q.imageUrl || q.raw?.imageUrl) && (
-                                <div style={{ marginTop: "10px", marginLeft: "20px", textAlign: "center", border: "1px solid #e2e8f0", padding: "10px", borderRadius: "8px", background: "#fafafa" }}>
-                                  <img src={q.imageUrl || q.raw?.imageUrl} alt="Question Diagram" style={{ maxHeight: "200px", maxWidth: "100%", objectFit: "contain" }} />
-                                  <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px", fontStyle: "italic" }}>
-                                    Figure Q{qIdx + 1}: {q.diagramTitle || "Question Diagram"}
+                          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                            {group.map((q, qIdx) => (
+                              <div key={q.id || qIdx} className="q-item" style={{ fontSize: "13.5px" }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
+                                  <div style={{ flex: 1 }}>
+                                    <strong>Q{qIdx + 1}.</strong> {q.question || q.statement}
+                                  </div>
+                                  <div className="q-marks" style={{ fontWeight: 700, flexShrink: 0, fontSize: "13px" }}>
+                                    [{mVal}]
                                   </div>
                                 </div>
-                              )}
 
-                              {/* Question Metadata Footer */}
-                              <div style={{ display: "flex", gap: "12px", fontSize: "10.5px", color: "#64748b", fontFamily: "sans-serif", marginTop: "4px", marginLeft: "20px" }}>
-                                <span>Unit: {q.unit || "Unit I"}</span>
-                                {q.bloomLevel && <span>Bloom's: {q.bloomLevel}</span>}
-                                <span>CO: CO{(qIdx % 4) + 1}</span>
+                                {/* MCQ Options if available */}
+                                {q.options && q.options.length > 0 && (
+                                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px", marginTop: "8px", marginLeft: "20px", fontSize: "12.5px", fontFamily: "sans-serif" }}>
+                                    {q.options.map((opt: string, optIdx: number) => (
+                                      <div key={optIdx}>
+                                        <strong>({String.fromCharCode(65 + optIdx)})</strong> {opt}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {/* Attached Diagram Image inside Word Paper */}
+                                {(q.imageUrl || q.raw?.imageUrl) && (
+                                  <div style={{ marginTop: "10px", marginLeft: "20px", textAlign: "center", border: "1px solid #e2e8f0", padding: "10px", borderRadius: "8px", background: "#fafafa" }}>
+                                    <img src={q.imageUrl || q.raw?.imageUrl} alt="Question Diagram" style={{ maxHeight: "200px", maxWidth: "100%", objectFit: "contain" }} />
+                                    <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px", fontStyle: "italic" }}>
+                                      Figure Q{qIdx + 1}: {q.diagramTitle || "Question Diagram"}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Question Metadata Footer */}
+                                <div style={{ display: "flex", gap: "12px", fontSize: "10.5px", color: "#64748b", fontFamily: "sans-serif", marginTop: "4px", marginLeft: "20px" }}>
+                                  <span>Unit: {q.unit || "Unit I"}</span>
+                                  {q.bloomLevel && <span>Bloom's: {q.bloomLevel}</span>}
+                                  <span>CO: CO{(qIdx % 4) + 1}</span>
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    });
+                  })()}
 
                   <div style={{ textAlign: "center", marginTop: "30px", borderTop: "1px solid #cbd5e1", paddingTop: "12px", fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px" }}>
                     *** END OF QUESTION PAPER ***
@@ -588,47 +598,55 @@ export function ViewModal({
                       </span>
                     </div>
                     <div style={{ fontSize: "11.5px", color: "#64748b" }}>
-                      5 Marks: {questionsList.filter(q => Number(q.marks || 5) === 5).length} | 10 Marks: {questionsList.filter(q => Number(q.marks) === 10).length} | 12 Marks: {questionsList.filter(q => Number(q.marks) === 12).length}
+                      {Array.from(new Set(questionsList.map(q => Number(q.marks) || 5)))
+                        .sort((a,b) => a - b)
+                        .map(m => `${m} Marks: ${questionsList.filter(q => (Number(q.marks) || 5) === m).length}`)
+                        .join(" | ")}
                     </div>
                   </div>
 
                   <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxHeight: "380px", overflowY: "auto", paddingRight: "4px" }}>
-                    {[5, 10, 12].map((mVal) => {
-                      const markGroup = questionsList.filter((q) => (Number(q.marks) || 5) === mVal);
-                      if (markGroup.length === 0) return null;
+                    {(() => {
+                      const uniqueMarks = Array.from(
+                        new Set(questionsList.map((q) => Number(q.marks) || 5))
+                      ).sort((a, b) => a - b);
 
-                      const badgeBg = mVal === 5 ? "#eff6ff" : mVal === 10 ? "#f0fdf4" : "#faf5ff";
-                      const badgeColor = mVal === 5 ? "#1d4ed8" : mVal === 10 ? "#15803d" : "#7e22ce";
-                      const badgeBorder = mVal === 5 ? "#bfdbfe" : mVal === 10 ? "#bbf7d0" : "#e9d5ff";
+                      return uniqueMarks.map((mVal) => {
+                        const markGroup = questionsList.filter((q) => (Number(q.marks) || 5) === mVal);
+                        if (markGroup.length === 0) return null;
 
-                      return (
-                        <div key={mVal} style={{ background: "#f8fafc", border: `1px solid ${badgeBorder}`, borderRadius: "14px", padding: "14px" }}>
-                          <div style={{ fontSize: "12.5px", fontWeight: 800, color: badgeColor, marginBottom: "10px", display: "flex", alignItems: "center", gap: "8px" }}>
-                            <span style={{ background: badgeBg, padding: "3px 10px", borderRadius: "8px", border: `1px solid ${badgeBorder}` }}>
-                              📌 Section ({mVal} Marks Questions) — {markGroup.length} Question(s)
-                            </span>
-                          </div>
+                        const badgeBg = mVal <= 2 ? "#fef2f2" : mVal === 5 ? "#eff6ff" : mVal === 10 ? "#f0fdf4" : "#faf5ff";
+                        const badgeColor = mVal <= 2 ? "#dc2626" : mVal === 5 ? "#1d4ed8" : mVal === 10 ? "#15803d" : "#7e22ce";
+                        const badgeBorder = mVal <= 2 ? "#fca5a5" : mVal === 5 ? "#bfdbfe" : mVal === 10 ? "#bbf7d0" : "#e9d5ff";
 
-                          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                            {markGroup.map((q, qIdx) => (
-                              <div
-                                key={q.id || qIdx}
-                                style={{
-                                  background: "#ffffff",
-                                  border: "1px solid #e2e8f0",
-                                  borderRadius: "12px",
-                                  padding: "12px 16px",
-                                  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.02)",
-                                }}
-                              >
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "10px", marginBottom: "6px" }}>
-                                  <div style={{ fontSize: "13.5px", fontWeight: 700, color: "#0f172a", lineHeight: 1.4 }}>
-                                    Q{qIdx + 1}. {q.question || q.statement}
+                        return (
+                          <div key={mVal} style={{ background: "#f8fafc", border: `1px solid ${badgeBorder}`, borderRadius: "14px", padding: "14px" }}>
+                            <div style={{ fontSize: "12.5px", fontWeight: 800, color: badgeColor, marginBottom: "10px", display: "flex", alignItems: "center", gap: "8px" }}>
+                              <span style={{ background: badgeBg, padding: "3px 10px", borderRadius: "8px", border: `1px solid ${badgeBorder}` }}>
+                                📌 Section ({mVal} Marks Questions) — {markGroup.length} Question(s)
+                              </span>
+                            </div>
+
+                            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                              {markGroup.map((q, qIdx) => (
+                                <div
+                                  key={q.id || qIdx}
+                                  style={{
+                                    background: "#ffffff",
+                                    border: "1px solid #e2e8f0",
+                                    borderRadius: "12px",
+                                    padding: "12px 16px",
+                                    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.02)",
+                                  }}
+                                >
+                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "10px", marginBottom: "6px" }}>
+                                    <div style={{ fontSize: "13.5px", fontWeight: 700, color: "#0f172a", lineHeight: 1.4 }}>
+                                      Q{qIdx + 1}. {q.question || q.statement}
+                                    </div>
+                                    <span style={{ fontSize: "11px", fontWeight: 700, background: badgeBg, color: badgeColor, padding: "2px 8px", borderRadius: "6px", flexShrink: 0 }}>
+                                      {mVal} Marks
+                                    </span>
                                   </div>
-                                  <span style={{ fontSize: "11px", fontWeight: 700, background: badgeBg, color: badgeColor, padding: "2px 8px", borderRadius: "6px", flexShrink: 0 }}>
-                                    {mVal} Marks
-                                  </span>
-                                </div>
 
                                 <div style={{ display: "flex", gap: "12px", fontSize: "11.5px", color: "#64748b", flexWrap: "wrap", marginTop: "4px" }}>
                                   <span>Type: <strong>{q.type || "Descriptive"}</strong></span>
@@ -651,13 +669,14 @@ export function ViewModal({
                           </div>
                         </div>
                       );
-                    })}
-                  </div>
+                    });
+                  })()}
                 </div>
-              )}
-            </div>
-          )}
-        </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
         {/* Footer */}
         <div

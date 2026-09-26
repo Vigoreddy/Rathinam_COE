@@ -89,21 +89,21 @@ export default function ApprovalPage() {
   });
 
   const handleOpenSubjectModal = (subjName: string) => {
+    const cleanSubj = subjName.replace(/\s*\(All\)/i, "").trim();
     const subjQuestions = questions.filter((q) => {
       if (currentUser.role === "HOD" && q.status !== "Pending") return false;
       if (currentUser.role === "DEAN" && q.status !== "Verified") return false;
-      return (q.subject || "").toLowerCase().includes(subjName.toLowerCase()) ||
-             subjName.toLowerCase().includes((q.subject || "").toLowerCase());
+      const qSubj = (q.subject || "").trim();
+      return (
+        qSubj.toLowerCase().includes(cleanSubj.toLowerCase()) ||
+        cleanSubj.toLowerCase().includes(qSubj.toLowerCase())
+      );
     });
-
-    const displayList = subjQuestions.length > 0
-      ? subjQuestions
-      : questions.filter(q => (q.subject || "").toLowerCase().includes(subjName.toLowerCase()));
 
     setSubjectModalData({
       isOpen: true,
-      subjectName: subjName,
-      questions: displayList.length > 0 ? displayList : questions,
+      subjectName: cleanSubj,
+      questions: subjQuestions,
     });
   };
 
@@ -922,18 +922,29 @@ export default function ApprovalPage() {
                     );
                   })}
 
-                  {/* Marks Breakdown Packs (5 Marks, 10 Marks, 12 Marks) */}
-                  {[5, 10, 12].map((mVal) => {
-                    const markQs = questions.filter((q) => {
-                      if (currentUser.role === "HOD" && q.status !== "Pending") return false;
-                      if (currentUser.role === "DEAN" && q.status !== "Verified") return false;
-                      return (Number(q.marks) || 5) === mVal;
-                    });
-                    if (markQs.length === 0) return null;
+                  {/* Marks Breakdown Packs (2 Marks, 5 Marks, 10 Marks, 12 Marks, etc.) */}
+                  {Array.from(new Set([2, 5, 10, 12, ...questions.map((q) => Number(q.marks) || 5)]))
+                    .sort((a, b) => a - b)
+                    .map((mVal) => {
+                      const markQs = questions.filter((q) => {
+                        if (currentUser.role === "HOD" && q.status !== "Pending") return false;
+                        if (currentUser.role === "DEAN" && q.status !== "Verified") return false;
+                        return (Number(q.marks) || 5) === mVal;
+                      });
+                      if (markQs.length === 0) return null;
 
-                    const badgeGrad = mVal === 5 ? "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)" : mVal === 10 ? "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)" : "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)";
-                    const borderCol = mVal === 5 ? "#bfdbfe" : mVal === 10 ? "#bbf7d0" : "#e9d5ff";
-                    const txtCol = mVal === 5 ? "#1d4ed8" : mVal === 10 ? "#15803d" : "#7e22ce";
+                      const badgeGrad =
+                        mVal <= 2
+                          ? "linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)"
+                          : mVal === 5
+                          ? "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)"
+                          : mVal === 10
+                          ? "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)"
+                          : "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)";
+                      const borderCol =
+                        mVal <= 2 ? "#fca5a5" : mVal === 5 ? "#bfdbfe" : mVal === 10 ? "#bbf7d0" : "#e9d5ff";
+                      const txtCol =
+                        mVal <= 2 ? "#dc2626" : mVal === 5 ? "#1d4ed8" : mVal === 10 ? "#15803d" : "#7e22ce";
 
                     return (
                       <div

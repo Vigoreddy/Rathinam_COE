@@ -164,56 +164,83 @@ export default function PrintPaperPage() {
           @media print {
             @page {
               size: A4 portrait;
-              margin: 10mm 12mm 10mm 12mm;
+              margin: 12mm 12mm 12mm 12mm;
             }
-            body * {
-              visibility: hidden !important;
+
+            /* Hide all non-printable screen UI */
+            .no-print, aside, header, footer, nav, button, [role="status"], [class*="toast"], [class*="Toast"] {
+              display: none !important;
+              height: 0 !important;
+              width: 0 !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              overflow: hidden !important;
             }
-            #official-printable-paper, #official-printable-paper * {
-              visibility: visible !important;
+
+            /* Reset document root and layout wrappers for multi-page pagination */
+            html, body {
+              background: #ffffff !important;
+              color: #000000 !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              width: 100% !important;
+              height: auto !important;
+              min-height: 0 !important;
+              max-height: none !important;
+              overflow: visible !important;
+              font-size: 11pt !important;
             }
+
+            div, main, section {
+              display: block !important;
+              position: static !important;
+              float: none !important;
+              width: 100% !important;
+              height: auto !important;
+              min-height: 0 !important;
+              max-height: none !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              overflow: visible !important;
+              box-shadow: none !important;
+              border: none !important;
+              background: transparent !important;
+            }
+
+            /* Official Paper Container in normal static multi-page document flow */
             #official-printable-paper {
-              position: absolute !important;
-              left: 0 !important;
-              top: 0 !important;
+              display: block !important;
+              position: static !important;
+              float: none !important;
               width: 100% !important;
               max-width: 100% !important;
-              padding: 0 !important;
               margin: 0 !important;
+              padding: 0 !important;
               box-shadow: none !important;
               border: none !important;
               background: #ffffff !important;
+              color: #000000 !important;
+              overflow: visible !important;
+              height: auto !important;
             }
-            .no-print, aside, header, footer, nav, button, [role="status"], [class*="toast"], [class*="Toast"] {
-              display: none !important;
-              visibility: hidden !important;
-              height: 0 !important;
-              width: 0 !important;
-              position: absolute !important;
-              top: -9999px !important;
-              left: -9999px !important;
-            }
-            .print-layout-container {
-              display: block !important;
-              width: 100% !important;
-              margin: 0 !important;
-              padding: 0 !important;
-            }
+
             .question-block {
-              page-break-inside: avoid;
-              break-inside: avoid;
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+              margin-bottom: 12px !important;
+            }
+
+            .part-header {
+              page-break-after: avoid !important;
+              break-after: avoid !important;
+              margin-top: 14px !important;
               margin-bottom: 10px !important;
             }
-            .part-header {
-              page-break-after: avoid;
-              break-after: avoid;
-              margin-top: 12px !important;
-              margin-bottom: 8px !important;
-            }
+
             .end-paper-footer {
-              page-break-before: avoid;
-              break-before: avoid;
-              margin-top: 16px !important;
+              page-break-before: avoid !important;
+              break-before: avoid !important;
+              margin-top: 20px !important;
             }
           }
         `}</style>

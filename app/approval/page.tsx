@@ -850,12 +850,12 @@ export default function ApprovalPage() {
                 </span>
               </div>
 
-              {/* Subject & Marks Question Inspection Cards */}
+              {/* Subject Question Inspection Cards (Subject Wise Only) */}
               <div style={{ marginBottom: "22px", padding: "16px", background: "linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%)", borderRadius: "14px", border: "1px solid #dbeafe" }}>
                 <div style={{ fontSize: "13.5px", fontWeight: 800, color: "#1e3a8a", marginBottom: "12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <BookOpen size={16} color="#2563eb" />
-                    <span>Subject & Marks Question Inspection Packs</span>
+                    <span>Subject Question Inspection Packs</span>
                   </div>
                   <span style={{ fontSize: "11px", fontWeight: 700, color: "#2563eb", background: "#ffffff", padding: "3px 10px", borderRadius: "20px", border: "1px solid #bfdbfe" }}>
                     Click 👁️ to read full questions & approve
@@ -917,85 +917,6 @@ export default function ApprovalPage() {
                         >
                           <Eye size={14} />
                           <span>View All</span>
-                        </button>
-                      </div>
-                    );
-                  })}
-
-                  {/* Marks Breakdown Packs (2 Marks, 5 Marks, 10 Marks, 12 Marks, etc.) */}
-                  {Array.from(new Set([2, 5, 10, 12, ...questions.map((q) => Number(q.marks) || 5)]))
-                    .sort((a, b) => a - b)
-                    .map((mVal) => {
-                      const markQs = questions.filter((q) => {
-                        return (Number(q.marks) || 5) === mVal;
-                      });
-                      if (markQs.length === 0) return null;
-
-                      const badgeGrad =
-                        mVal <= 2
-                          ? "linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)"
-                          : mVal === 5
-                          ? "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)"
-                          : mVal === 10
-                          ? "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)"
-                          : "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)";
-                      const borderCol =
-                        mVal <= 2 ? "#fca5a5" : mVal === 5 ? "#bfdbfe" : mVal === 10 ? "#bbf7d0" : "#e9d5ff";
-                      const txtCol =
-                        mVal <= 2 ? "#dc2626" : mVal === 5 ? "#1d4ed8" : mVal === 10 ? "#15803d" : "#7e22ce";
-
-                    return (
-                      <div
-                        key={mVal}
-                        style={{
-                          background: badgeGrad,
-                          border: `1px solid ${borderCol}`,
-                          borderRadius: "12px",
-                          padding: "12px 14px",
-                          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.02)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "10px",
-                        }}
-                      >
-                        <div>
-                          <strong style={{ display: "block", fontSize: "13px", color: txtCol, fontWeight: 800 }}>
-                            🎯 {mVal} Marks Pack
-                          </strong>
-                          <span style={{ fontSize: "11px", color: "#475569", fontWeight: 600 }}>
-                            {markQs.length} Ready for Approval
-                          </span>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSubjectModalData({
-                              isOpen: true,
-                              subjectName: `${mVal} Marks Questions`,
-                              questions: markQs,
-                            });
-                          }}
-                          title={`Read ${mVal} Marks questions`}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "6px",
-                            padding: "7px 12px",
-                            borderRadius: "8px",
-                            background: txtCol,
-                            color: "#ffffff",
-                            border: "none",
-                            fontSize: "12px",
-                            fontWeight: 700,
-                            cursor: "pointer",
-                            boxShadow: `0 2px 8px ${borderCol}`,
-                            flexShrink: 0,
-                          }}
-                        >
-                          <Eye size={14} />
-                          <span>View</span>
                         </button>
                       </div>
                     );

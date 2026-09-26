@@ -124,10 +124,7 @@ export default function PrintPaperPage() {
 
   // Print Action
   const handleTriggerPrint = () => {
-    showToast("Opening browser print dialog... Formatting official paper PDF.");
-    setTimeout(() => {
-      window.print();
-    }, 400);
+    window.print();
   };
 
   return (
@@ -149,36 +146,18 @@ export default function PrintPaperPage() {
           @media print {
             @page {
               size: A4 portrait;
-              margin: 12mm 15mm 12mm 15mm;
+              margin: 10mm 12mm 10mm 12mm;
             }
-            html, body {
-              background: #ffffff !important;
-              margin: 0 !important;
-              padding: 0 !important;
-              width: 100% !important;
-              height: auto !important;
-              min-height: 0 !important;
-              max-height: none !important;
-              overflow: visible !important;
-              font-size: 11pt !important;
+            body * {
+              visibility: hidden !important;
             }
-            .no-print, aside, header, footer, nav, button, [role="status"] {
-              display: none !important;
-              height: 0 !important;
-              margin: 0 !important;
-              padding: 0 !important;
-              overflow: hidden !important;
-            }
-            .print-layout-container {
-              display: block !important;
-              width: 100% !important;
-              margin: 0 !important;
-              padding: 0 !important;
-              height: auto !important;
-              min-height: 0 !important;
+            #official-printable-paper, #official-printable-paper * {
+              visibility: visible !important;
             }
             #official-printable-paper {
-              position: static !important;
+              position: absolute !important;
+              left: 0 !important;
+              top: 0 !important;
               width: 100% !important;
               max-width: 100% !important;
               padding: 0 !important;
@@ -186,24 +165,37 @@ export default function PrintPaperPage() {
               box-shadow: none !important;
               border: none !important;
               background: #ffffff !important;
-              page-break-after: avoid;
-              break-after: avoid;
+            }
+            .no-print, aside, header, footer, nav, button, [role="status"], [class*="toast"], [class*="Toast"] {
+              display: none !important;
+              visibility: hidden !important;
+              height: 0 !important;
+              width: 0 !important;
+              position: absolute !important;
+              top: -9999px !important;
+              left: -9999px !important;
+            }
+            .print-layout-container {
+              display: block !important;
+              width: 100% !important;
+              margin: 0 !important;
+              padding: 0 !important;
             }
             .question-block {
               page-break-inside: avoid;
               break-inside: avoid;
-              margin-bottom: 12px !important;
+              margin-bottom: 10px !important;
             }
             .part-header {
               page-break-after: avoid;
               break-after: avoid;
-              margin-top: 14px !important;
-              margin-bottom: 10px !important;
+              margin-top: 12px !important;
+              margin-bottom: 8px !important;
             }
             .end-paper-footer {
               page-break-before: avoid;
               break-before: avoid;
-              margin-top: 20px !important;
+              margin-top: 16px !important;
             }
           }
         `}</style>

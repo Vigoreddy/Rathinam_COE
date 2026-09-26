@@ -1371,6 +1371,7 @@ export function ToastNotification({
 
   return (
     <div
+      className="no-print"
       style={{
         position: "fixed",
         bottom: "24px",

@@ -866,9 +866,9 @@ export default function ApprovalPage() {
                   {/* Main Subject Pack */}
                   {Array.from(new Set(questions.map((q) => q.subject || "Viscom & VFX"))).map((subjName) => {
                     const subjQuestions = questions.filter((q) => {
-                      if (currentUser.role === "HOD" && q.status !== "Pending") return false;
-                      if (currentUser.role === "DEAN" && q.status !== "Verified") return false;
-                      return (q.subject || "").toLowerCase().includes(subjName.toLowerCase());
+                      const qSubj = (q.subject || "").trim().toLowerCase();
+                      const targetSubj = subjName.trim().toLowerCase();
+                      return qSubj.includes(targetSubj) || targetSubj.includes(qSubj);
                     });
 
                     return (
@@ -890,8 +890,8 @@ export default function ApprovalPage() {
                           <strong style={{ display: "block", fontSize: "13px", color: "#1e40af", fontWeight: 800 }}>
                             📚 {subjName} (All)
                           </strong>
-                          <span style={{ fontSize: "11px", color: subjQuestions.length > 0 ? "#d97706" : "#16a34a", fontWeight: 600 }}>
-                            {subjQuestions.length} Ready for Approval
+                          <span style={{ fontSize: "11px", color: "#2563eb", fontWeight: 600 }}>
+                            {subjQuestions.length} Question(s)
                           </span>
                         </div>
 
@@ -927,8 +927,6 @@ export default function ApprovalPage() {
                     .sort((a, b) => a - b)
                     .map((mVal) => {
                       const markQs = questions.filter((q) => {
-                        if (currentUser.role === "HOD" && q.status !== "Pending") return false;
-                        if (currentUser.role === "DEAN" && q.status !== "Verified") return false;
                         return (Number(q.marks) || 5) === mVal;
                       });
                       if (markQs.length === 0) return null;

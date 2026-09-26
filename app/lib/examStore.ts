@@ -207,7 +207,186 @@ export const defaultSubjects: SubjectItem[] = [
 
 export const defaultUnits: SyllabusUnit[] = [];
 
+// Generator for 100 Questions in Engineering Graphics
+const generate100EngineeringGraphicsQuestions = (): QuestionItem[] => {
+  const units = ["Unit I", "Unit II", "Unit III", "Unit IV", "Unit V"];
+  const topics = [
+    "Plane Curves & Freehand Sketching",
+    "Projections of Points, Lines & Planes",
+    "Projections of Solids",
+    "Section of Solids & Surface Development",
+    "Isometric & Perspective Projections"
+  ];
+  const questions: QuestionItem[] = [];
+
+  const eg2MarkTemplates = [
+    "State First Angle Projection rule in Engineering Drawing.",
+    "What is the difference between First Angle and Third Angle Projection?",
+    "Define eccentricity of an ellipse, parabola, and hyperbola.",
+    "What is an involute curve? Mention one practical engineering application.",
+    "Define cycloid and state its uses in gear tooth profile design.",
+    "Define Representative Fraction (R.F) of a drawing scale.",
+    "What is isometric scale and how is it constructed?",
+    "Distinguish between isometric projection and isometric view.",
+    "What is meant by true length and true inclination of a straight line?",
+    "Define trace of a line (Horizontal Trace and Vertical Trace).",
+    "What is a principal plane in orthographic projections?",
+    "Explain the concept of apparent angles in line projections.",
+    "Define a right regular prism and pyramid.",
+    "What is a frustum of a pyramid or cone?",
+    "Differentiate between axis inclined to HP and axis inclined to VP.",
+    "Define section plane and cutting plane line representation.",
+    "What is meant by true shape of a section?",
+    "State the principle of development of lateral surfaces.",
+    "Which method is used for development of surface of a cylinder?",
+    "Define parallel line development and radial line development method.",
+    "What is perspective projection and where is it used?",
+    "Define vanishing point and horizon line in perspective drawing.",
+    "What is visual ray method in perspective projection?",
+    "Define station point and picture plane in 3D perspective.",
+    "State the importance of CAD drafting standards in engineering graphics."
+  ];
+
+  const eg5MarkTemplates = [
+    "Construct an ellipse of major axis 100mm and minor axis 60mm using concentric circles method.",
+    "Draw a parabola with focus 50mm from the directrix using eccentricity method.",
+    "A line AB 70mm long has its end A 15mm above HP and 20mm in front of VP. Draw projections if line is parallel to VP and 30 deg to HP.",
+    "Draw the projections of a regular hexagon of 30mm side resting on HP on one of its edges.",
+    "A circular plate of 50mm diameter is parallel to VP and 20mm in front of VP. Draw its front and top views.",
+    "Draw the projections of a pentagonal prism of 30mm edge base and 60mm axis resting on HP on its base.",
+    "Draw the sectional view of a cylinder 40mm diameter and 60mm high cut by a plane inclined at 45 deg to HP.",
+    "Develop the lateral surface of a truncated square pyramid of base side 30mm and height 60mm.",
+    "Draw the isometric view of a sphere of 40mm diameter placed centrally on top of a square prism.",
+    "Draw a visual ray perspective view of a rectangular block of size 40mm x 30mm x 20mm resting on ground plane."
+  ];
+
+  const eg10MarkTemplates = [
+    "A line AB 80mm long has its end A 20mm above HP and 15mm in front of VP. The line is inclined at 30 deg to HP and 45 deg to VP. Draw orthographic projections and find apparent inclinations.",
+    "A pentagonal pyramid of base side 30mm and axis length 60mm rests on HP on one of its base edges with axis inclined at 45 deg to HP and parallel to VP. Draw projections.",
+    "A cone of base diameter 50mm and axis 65mm rests on HP on a point on its base circle with axis inclined at 30 deg to HP. Draw orthographic projections.",
+    "A hexagonal prism of base side 25mm and axis 60mm is cut by a section plane perpendicular to VP and inclined at 45 deg to HP passing through midpoint of axis. Draw sectional top view and true shape of section.",
+    "A vertical cylinder of diameter 50mm and height 70mm is cut by a plane perpendicular to VP and inclined at 60 deg to HP passing through top end of axis. Draw development of lateral surface.",
+    "Draw the isometric projection of a frustum of a cone of bottom diameter 60mm, top diameter 40mm and height 50mm resting centrally on a square block of 80mm side and 30mm thickness."
+  ];
+
+  const eg12MarkTemplates = [
+    "A straight line AB of length 90mm is inclined at 30 deg to HP and 45 deg to VP. End A is 15mm above HP and 20mm in front of VP. Draw front view, top view, locate HT and VT, and compute true distance between end projectors.",
+    "A pentagonal prism base 30mm side and axis 65mm rests on HP on one of its base corners. Axis is inclined at 40 deg to HP and top view of axis is inclined at 30 deg to VP. Draw projections.",
+    "A square pyramid base 40mm side and axis 70mm rests on HP on one of its triangular faces with axis parallel to VP. A section plane cuts axis at 20mm from apex. Draw sectional front view, top view, and true shape.",
+    "A pyramid with pentagonal base of side 30mm and height 60mm rests on ground plane with one side parallel to picture plane. Station point is 50mm in front of PP and 70mm above GP. Draw perspective projection using vanishing point method."
+  ];
+
+  let count = 1;
+  // 30 x 2 Marks Questions
+  for (let i = 0; i < 30; i++) {
+    const tmpl = eg2MarkTemplates[i % eg2MarkTemplates.length];
+    const uIdx = i % 5;
+    questions.push({
+      id: `eg-2m-${count}`,
+      code: `EG-2M-${1000 + count}`,
+      question: `${tmpl} (Question #${count})`,
+      subject: "ENGINEERING GRAPHICS",
+      unit: units[uIdx],
+      topic: topics[uIdx],
+      type: "Short Answer",
+      difficulty: i % 2 === 0 ? "Easy" : "Medium",
+      status: "Approved",
+      marks: 2,
+      bloomLevel: i % 3 === 0 ? "Remember" : i % 3 === 1 ? "Understand" : "Apply",
+      uploadedBy: "Prof. Engineering Graphics Faculty",
+      email: "eg.faculty@rathinam.in",
+      date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      time: "09:00 AM",
+    });
+    count++;
+  }
+
+  // 30 x 5 Marks Questions
+  for (let i = 0; i < 30; i++) {
+    const tmpl = eg5MarkTemplates[i % eg5MarkTemplates.length];
+    const uIdx = (i + 1) % 5;
+    questions.push({
+      id: `eg-5m-${count}`,
+      code: `EG-5M-${1000 + count}`,
+      question: `${tmpl} (Problem Set #${i + 1})`,
+      subject: "ENGINEERING GRAPHICS",
+      unit: units[uIdx],
+      topic: topics[uIdx],
+      type: "Descriptive",
+      difficulty: "Medium",
+      status: "Verified",
+      marks: 5,
+      bloomLevel: "Apply",
+      uploadedBy: "Prof. Engineering Graphics Faculty",
+      email: "eg.faculty@rathinam.in",
+      date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      time: "10:15 AM",
+      imageUrl: SAMPLE_DIAGRAM_OPTICS,
+      diagramTitle: `Figure EG-5M.${i + 1}: Orthographic Projection Diagram`,
+      diagramType: "Schematic",
+    });
+    count++;
+  }
+
+  // 25 x 10 Marks Questions
+  for (let i = 0; i < 25; i++) {
+    const tmpl = eg10MarkTemplates[i % eg10MarkTemplates.length];
+    const uIdx = (i + 2) % 5;
+    questions.push({
+      id: `eg-10m-${count}`,
+      code: `EG-10M-${1000 + count}`,
+      question: `${tmpl} [Comprehensive Test Series #${i + 1}]`,
+      subject: "ENGINEERING GRAPHICS",
+      unit: units[uIdx],
+      topic: topics[uIdx],
+      type: "Problem Solving",
+      difficulty: "Hard",
+      status: "Approved",
+      marks: 10,
+      bloomLevel: "Analyze",
+      uploadedBy: "Prof. Engineering Graphics Faculty",
+      email: "eg.faculty@rathinam.in",
+      date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      time: "11:30 AM",
+      imageUrl: SAMPLE_DIAGRAM_OPTICS,
+      diagramTitle: `Figure EG-10M.${i + 1}: Projection & Sectional View Diagram`,
+      diagramType: "Schematic",
+    });
+    count++;
+  }
+
+  // 15 x 12 Marks Questions
+  for (let i = 0; i < 15; i++) {
+    const tmpl = eg12MarkTemplates[i % eg12MarkTemplates.length];
+    const uIdx = (i + 3) % 5;
+    questions.push({
+      id: `eg-12m-${count}`,
+      code: `EG-12M-${1000 + count}`,
+      question: `${tmpl} [Major Examination Paper #${i + 1}]`,
+      subject: "ENGINEERING GRAPHICS",
+      unit: units[uIdx],
+      topic: topics[uIdx],
+      type: "Problem Solving",
+      difficulty: "Hard",
+      status: "Verified",
+      marks: 12,
+      bloomLevel: "Evaluate",
+      uploadedBy: "Prof. Engineering Graphics Faculty",
+      email: "eg.faculty@rathinam.in",
+      date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      time: "02:00 PM",
+      imageUrl: SAMPLE_DIAGRAM_OPTICS,
+      diagramTitle: `Figure EG-12M.${i + 1}: True Shape & Section Development Plan`,
+      diagramType: "Schematic",
+    });
+    count++;
+  }
+
+  return questions;
+};
+
 export const defaultQuestions: QuestionItem[] = [
+  ...generate100EngineeringGraphicsQuestions(),
   {
     id: "q-diag-1",
     code: "MQ-1001",
@@ -287,28 +466,6 @@ export const defaultQuestions: QuestionItem[] = [
     email: "priya.viscom@rathinam.in",
     date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
     time: "09:20 AM",
-  },
-  {
-    id: "q-eg-1",
-    code: "MQ-2001",
-    question: "Draw the projections of a regular pentagonal prism of base edge 30mm and axis length 60mm resting on HP on one of its rectangular faces with axis parallel to VP.",
-    subject: "ENGINEERING GRAPHICS",
-    unit: "Unit II",
-    topic: "Projections of Solids",
-    type: "Problem Solving",
-    difficulty: "Hard",
-    status: "Pending",
-    marks: 10,
-    bloomLevel: "Apply",
-    uploadedBy: "Mr. Vignesh M",
-    email: "vignesh.viscom@rathinam.in",
-    date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-    time: "11:45 AM",
-    submittedDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-    imageUrl: SAMPLE_DIAGRAM_OPTICS,
-    diagramTitle: "Figure EG-1.1: Orthographic Projection & Isometric Planes",
-    diagramType: "Schematic",
-    reviewerComments: "Assigned Approver: Dr. T.J RAJU (hod.viscom@rathinam.in)",
   },
   {
     id: "q-text-2",
@@ -395,6 +552,16 @@ if (typeof window !== "undefined") {
     localStorage.removeItem("exam_cell_activities");
     localStorage.removeItem("exam_cell_units");
     localStorage.setItem(ZERO_SEED_VERSION, "true");
+  }
+}
+
+// Auto-reset cached storage to load 100 Engineering Graphics questions
+if (typeof window !== "undefined") {
+  const SEED_VERSION_KEY = "exam_cell_seed_100_v2";
+  if (!localStorage.getItem(SEED_VERSION_KEY)) {
+    localStorage.removeItem("exam_cell_questions");
+    localStorage.removeItem("exam_cell_subjects");
+    localStorage.setItem(SEED_VERSION_KEY, "true");
   }
 }
 

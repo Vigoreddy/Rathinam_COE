@@ -120,7 +120,7 @@ export default function DepartmentPage() {
         <div className="sidebar-logo">
           <img
             src="/images/rgu-logo.png"
-            alt="Rathinam Global University"
+            alt="Rathinam Global (Deemed to be University)"
           />
         </div>
 

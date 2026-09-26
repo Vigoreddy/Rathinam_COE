@@ -306,7 +306,7 @@ export default function DashboardPage() {
           <div style={{ padding: "6px 10px 24px 10px", position: "relative" }}>
             <img
               src="/images/rgu-logo.png"
-              alt="Rathinam Global University"
+              alt="Rathinam Global (Deemed to be University)"
               style={{
                 maxHeight: "38px",
                 width: "auto",

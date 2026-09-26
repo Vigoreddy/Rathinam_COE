@@ -463,8 +463,8 @@ export function ViewModal({
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginBottom: "4px" }}>
                       <img src="/images/rgu-logo.png" alt="University Logo" style={{ height: "36px", objectFit: "contain" }} />
                     </div>
-                    <h2 style={{ margin: "4px 0 2px", fontSize: "18px", fontWeight: 800, letterSpacing: "0.5px", textTransform: "uppercase", color: "#0f172a" }}>
-                      RATHINAM GLOBAL UNIVERSITY
+                    <h2 style={{ margin: "4px 0 2px", fontSize: "17px", fontWeight: 800, letterSpacing: "0.5px", textTransform: "uppercase", color: "#0f172a" }}>
+                      RATHINAM GLOBAL (DEEMED TO BE UNIVERSITY)
                     </h2>
                     <div style={{ fontSize: "12px", fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "1px" }}>
                       OFFICE OF THE CONTROLLER OF EXAMINATIONS

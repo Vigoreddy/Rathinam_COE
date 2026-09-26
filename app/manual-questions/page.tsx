@@ -661,7 +661,7 @@ export default function ManualQuestionsPage() {
           <div style={{ padding: "6px 10px 24px 10px" }}>
             <img
               src="/images/rgu-logo.png"
-              alt="Rathinam Global University"
+              alt="Rathinam Global (Deemed to be University)"
               style={{ maxHeight: "38px", width: "auto", objectFit: "contain" }}
             />
           </div>
